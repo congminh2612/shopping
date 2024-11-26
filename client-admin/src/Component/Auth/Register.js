@@ -17,9 +17,6 @@ const Register = () => {
         email: "",
         birthday: "",
         password: "",
-        address: "",
-        city: "",
-        country: "",
     });
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
@@ -233,41 +230,7 @@ const Register = () => {
                         />
                     </div>
 
-            
-
-                    <div className="input-group">
-                        <input
-                            type="text"
-                            name="address"
-                            placeholder=" "
-                            value={formData.address}
-                            onChange={handleChange}
-                        />
-                        <label>Address</label>
-                    </div>
-
-                    <div className="input-group">
-                        <input
-                            type="text"
-                            name="city"
-                            placeholder=" "
-                            value={formData.city}
-                            onChange={handleChange}
-                        />
-                        <label>City</label>
-                    </div>
-
-                    <div className="input-group">
-                        <input
-                            type="text"
-                            name="country"
-                            placeholder=" "
-                            value={formData.country}
-                            onChange={handleChange}
-                        />
-                        <label>Country</label>
-                    </div>
-
+                             
                     <button
                         type="button"
                         onClick={handleRegister}
