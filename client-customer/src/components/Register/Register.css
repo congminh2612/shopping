@@ -1,113 +1,191 @@
-/* src/components/Register/Register.css */
+/* Container Styles */
+.register-form .register-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 40px auto; /* Thêm margin để cách biệt trên và dưới */
+  background-color: #ffffff;
+  padding: 40px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
 
-/* General Page Styles */
-.register-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: #ffffff;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-  
-  .register-container {
-    background: #ffffff;
-    padding: 30px;
-    max-width: 400px;
-    width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 40px;
-  }
-  
-  .register-container h2 {
-    text-align: center;
-    margin-bottom: 15px;
-    font-size: 1.8rem;
-    color: #333;
-    font-weight: bold;
-  }
-  
-  /* Form Styles */
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #444;
-  }
-  
-  .form-group input, 
-  .form-group select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-  }
-  
-  .form-group input:focus, 
-  .form-group select:focus {
-    border-color: #ff6f61;
-    outline: none;
-  }
-  
-  /* Error Message Styles */
-  .error-message {
-    color: #ff4d4d;
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-  }
-  
-  /* Button Styles */
-  .register-button {
-    width: 100%;
-    background: #ff6f61;
-    color: #ffffff;
-    padding: 10px;
-    font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  .register-button:hover {
-    background: #ff4a3d;
-  }
-  
-  /* Extra Link Styles */
-  .extra-links {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 0.9rem;
-  }
-  
-  .extra-links a {
-    color: #ff6f61;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  
-  .extra-links a:hover {
-    color: #ff4a3d;
-  }
-  
-  /* Responsive Styles */
-  @media (max-width: 600px) {
-    .register-container {
-      padding: 20px;
-    }
-  
-    .register-container h2 {
-      font-size: 1.5rem;
-    }
-  }
+/* Navigation Bar */
+.register-form .register-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-bottom: 40px;
+}
+
+.register-form .register-navigation .nav-link {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.3s ease, text-decoration 0.3s ease; /* Thêm hiệu ứng text-decoration */
+}
+
+.register-form .register-navigation .nav-link.active {
+  text-decoration: underline;
+  color: black;
+}
+
+.register-form .register-navigation .nav-link:hover {
+  color: black;
+  text-decoration: underline;
+}
+
+/* Form Styles */
+.register-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Input Group */
+.register-form .input-group {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.register-form .input-group input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 5px;
+  font-size: 16px;
+  background: none;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.register-form .input-group input:focus {
+  border-bottom: 1px solid black;
+}
+
+.register-form .input-group label {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #777;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.register-form .input-group input:focus + label,
+.register-form .input-group input:not(:placeholder-shown) + label {
+  top: -15px;
+  font-size: 12px;
+  color: black;
+}
+
+/* Gender Group */
+.register-form .gender-group {
+  margin-bottom: 30px;
+}
+
+.register-form .gender-group .form-label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.register-form .gender-options {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: start;
+}
+
+.register-form .gender-options label {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Success and Error Messages */
+.register-form .success-message,
+.register-form .error-message {
+  text-align: center;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.register-form .success-message {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.register-form .error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Button */
+.register-form button {
+  padding: 10px 20px;
+  background-color: black;
+  color: #ffffff;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.register-form button:hover {
+  background-color: #333; /* Thay đổi màu để nút khi hover dễ nhận biết */
+}
+
+/* General Adjustments */
+.register-form .password-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.2em;
+  color: #777;
+}
+
+.register-form .password-requirements {
+  margin-top: 15px;
+  padding: 10px;
+}
+
+.register-form .requirements-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+  color: #333;
+}
+
+.register-form .password-requirements ul {
+  list-style: none;
+  padding: 0;
+}
+
+.register-form .password-requirements li {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.register-form .password-requirements .valid {
+  color: green;
+}
+
+.register-form .password-requirements .invalid {
+  color: red;
+}
+
+.register-form .requirement-icon {
+  margin-right: 8px;
+}

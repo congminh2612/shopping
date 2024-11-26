@@ -1,136 +1,164 @@
-// src/components/Login/Login.js
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Login.css';
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEyeSlash as faEyeSlashRegular } from "@fortawesome/free-regular-svg-icons";
+import API from "../../api/api";
+import "./Login.css";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [isForgotPasswordModalOpen, setForgotPasswordModalOpen] =
+    useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const [loginType, setLoginType] = useState('Username');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const location = useLocation();
 
-  const handleLogin = async () => {
-    const identifier = 
-      loginType === 'Username'
-        ? username
-        : loginType === 'Email'
-        ? email
-        : phone;
-  
-    const userData = {
-      role: 'user', // Cố định là "user" nếu không cần lựa chọn
-      identifier,
-      password,
-      twoFactorCode: '' // Để trống nếu không yêu cầu
-    };
-  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      });
-  
-      const data = await response.json();
-      if (response.ok) {
-        alert('Đăng nhập thành công!');
-        localStorage.setItem('token', data.token); // Lưu token vào localStorage
-        navigate('/homepage'); // Điều hướng tới trang chủ sau khi đăng nhập thành công
-      } else {
-        setErrorMessage(data.message || 'Đăng nhập thất bại!');
+      if (!email || !password) {
+        setError("Vui lòng nhập email và mật khẩu!");
+        return;
       }
+      const response = await API.post(
+        "/auth/login",
+        {
+          email,
+          password,
+        }
+      );
+      console.log("Đăng nhập thành công:", response.data);
+      alert("Đăng nhập thành công!");
+      navigate("/admin/home");
     } catch (error) {
-      setErrorMessage('Đăng nhập thất bại. Vui lòng thử lại.');
+      setError(error.response?.data?.message || "Đã xảy ra lỗi khi đăng nhập!");
     }
   };
-  
+
+  const openForgotPasswordModal = () => {
+    setForgotPasswordModalOpen(true);
+    setForgotPasswordEmail("");
+    setError("");
+  };
+
+  const closeForgotPasswordModal = () => {
+    setForgotPasswordModalOpen(false);
+    setError("");
+  };
+
+  const handleForgotPasswordSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (!forgotPasswordEmail) {
+        setError("Vui lòng nhập email để nhận hướng dẫn đặt lại mật khẩu!");
+        return;
+      }
+      await API.post(
+        "/auth/request-password-reset",
+        {
+          email: forgotPasswordEmail,
+        }
+      );
+      alert("Hướng dẫn đặt lại mật khẩu đã được gửi đến email của bạn.");
+      closeForgotPasswordModal();
+    } catch (error) {
+      setError(error.response?.data?.message || "Đã xảy ra lỗi!");
+    }
+  };
+
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <h2>ĐĂNG NHẬP</h2>
-        <form>
-          <div className="form-group">
-            <label htmlFor="loginType">Chọn loại đăng nhập:</label>
-            <select
-              id="loginType"
-              value={loginType}
-              onChange={(e) => setLoginType(e.target.value)}
-              className="login-select"
-            >
-              <option value="Username">Username</option>
-              <option value="Email">Email</option>
-              <option value="Phone">Phone</option>
-            </select>
-          </div>
-
-          {loginType === 'Username' && (
-            <div className="form-group">
-              <label htmlFor="username">Username:</label>
-              <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Nhập Username"
-                required
-              />
-            </div>
-          )}
-
-          {loginType === 'Email' && (
-            <div className="form-group">
-              <label htmlFor="email">Email:</label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Nhập email"
-                required
-              />
-            </div>
-          )}
-
-          {loginType === 'Phone' && (
-            <div className="form-group">
-              <label htmlFor="phone">Số điện thoại:</label>
-              <input
-                type="tel"
-                id="phone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="Nhập số điện thoại"
-                required
-              />
-            </div>
-          )}
-
-          <div className="form-group">
-            <label htmlFor="password">Mật khẩu:</label>
+    <div className="login-container">
+      <div className="login-header">
+        <h2
+          className={location.pathname === "/admin/login" ? "active-link" : ""}
+          onClick={() => navigate("/admin/login")}
+        >
+          Already Registered?
+        </h2>
+        <h2
+          className={location.pathname === "/admin/register" ? "active-link" : ""}
+          onClick={() => navigate("/admin/register")}
+        >
+          Create Your Account
+        </h2>
+      </div>
+      <div className="login-box">
+        <p>If you are already registered with Nhom3, login here:</p>
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
             <input
-              type="password"
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder=" "
+              required
+            />
+            <label htmlFor="email">Email address*</label>
+          </div>
+          <div className="input-group">
+            <input
+              type={showPassword ? "text" : "password"}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mật khẩu"
+              placeholder=" "
               required
+            />
+            <label htmlFor="password">Password*</label>
+            <FontAwesomeIcon
+              icon={showPassword ? faEyeSlashRegular : faEye}
+              className="password-icon"
+              onClick={() => setShowPassword((prev) => !prev)}
             />
           </div>
 
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-          <button type="button" onClick={handleLogin} className="login-button">
-            Đăng nhập
+          {error && <p className="error-message">{error}</p>}
+          <button
+            type="button"
+            className="forgot-password"
+            onClick={openForgotPasswordModal}
+          >
+            Forgot your password?
+          </button>
+          <button type="submit" className="login-button">
+            LOGIN
           </button>
         </form>
-        <div className="extra-links">
-          <a href="/register">Đăng ký</a> &nbsp;•&nbsp;
-          <a href="/forgot-password">Quên mật khẩu</a>
-        </div>
       </div>
+
+      {isForgotPasswordModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="close-button" onClick={closeForgotPasswordModal}>
+              &times;
+            </button>
+            <h2>Forgot Your Password?</h2>
+            <p>Enter your email to reset your password.</p>
+            <form onSubmit={handleForgotPasswordSubmit}>
+              <div className="input-group">
+                <input
+                  type="email"
+                  id="forgot-password-email"
+                  value={forgotPasswordEmail}
+                  onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                  placeholder=" "
+                  required
+                />
+                <label htmlFor="forgot-password-email">Email address*</label>
+              </div>
+              {error && <p className="error-message">{error}</p>}
+              <button type="submit" className="submit-button">
+                Submit Request
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

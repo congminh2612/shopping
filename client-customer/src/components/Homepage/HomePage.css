@@ -1,87 +1,100 @@
-/* src/components/HomePage/HomePage.css */
-
 /* General Styles */
 .homepage {
-    height: 100vh; /* Chiều cao toàn màn hình */
+  height: 100vh; /* Chiều cao toàn màn hình */
+  width: 100%; /* Chiều rộng toàn màn hình */
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between; 
 }
-  /* Hero Banner */
-  .hero-banner {
-    background-image: url('https://pos.nvncdn.com/0406df-94299/bn/20240729_LstwbHwa.gif'); /* Đảm bảo đường dẫn chính xác */
-    background-size: cover; /* Hình ảnh phủ đầy khu vực */
-    background-position: center; /* Đặt hình ảnh ở giữa */
-    background-repeat: no-repeat; /* Không lặp lại hình ảnh */
-    width: 100%; /* Chiều rộng toàn bộ màn hình */
-    height: 100%; /* Chiều cao toàn bộ của trang */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .hero-content {
-    text-align: center;
-    color: white;
-  }
-  
-  .hero-banner h1 {
-    font-size: 3em;
-    margin-bottom: 0.5em;
-  }
-  
-  .hero-banner p {
-    font-size: 1.5em;
-    margin-bottom: 1em;
-  }
-  
-  .shop-now-btn {
-    padding: 10px 20px;
-    font-size: 1em;
-    background-color: #333;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .shop-now-btn:hover {
-    background-color: #555;
-  }
-  
-  /* Product List Styles (nếu cần cải thiện) */
-  .product-list {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .product-item {
-    width: 200px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
-  }
-  
-  .product-item img {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-  }
-  
-  .product-item:hover {
-    transform: scale(1.05);
-  }
-  
-  .product-item h3 {
-    font-size: 1.2em;
-    margin: 10px 0;
-  }
-  
-  .product-item p {
-    font-size: 1em;
-    color: #333;
-  }
-  
+
+/* Hero Banner */
+.hero-banner {
+  background-image: url('https://pos.nvncdn.com/0406df-94299/bn/20240729_LstwbHwa.gif'); /* Đảm bảo đường dẫn chính xác */
+  background-size: cover; /* Hình ảnh phủ đầy khu vực */
+  background-position: center; /* Đặt hình ảnh ở giữa */
+  background-repeat: no-repeat; /* Không lặp lại hình ảnh */
+  width: 100vw; /* Chiều rộng toàn bộ viewport */
+  height: 100vh; /* Chiều cao toàn bộ của viewport */
+  display: flex;
+  flex-direction: column; /* Giữ nội dung theo cột để dễ căn giữa */
+  align-items: center;
+  justify-content: center;
+  position: relative; /* Đảm bảo không bị ảnh hưởng bởi các thành phần khác */
+  overflow: hidden; /* Ngăn ngừa scroll nếu có nội dung dư thừa */
+}
+
+/* Hero Content */
+.hero-content {
+  text-align: center;
+  color: white;
+  padding: 20px; /* Thêm một chút padding để nội dung không quá sát biên */
+}
+
+.hero-banner h1 {
+  font-size: 3em;
+  margin-bottom: 0.5em;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Thêm bóng để dễ đọc trên nền ảnh */
+}
+
+.hero-banner p {
+  font-size: 1.5em;
+  margin-bottom: 1em;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5); /* Thêm bóng cho chữ */
+}
+
+.shop-now-btn {
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 5px; /* Thêm bo tròn để nút trông mềm mại hơn */
+}
+
+.shop-now-btn:hover {
+  background-color: #555;
+}
+
+/* Product List Styles (nếu cần cải thiện) */
+.product-list {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 40px 20px; /* Thêm padding cho phần danh sách sản phẩm để thoáng hơn */
+}
+
+.product-item {
+  width: calc(25% - 20px); /* Tự động điều chỉnh để phù hợp với kích thước container */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  background-color: #fff; /* Đặt màu nền trắng cho sản phẩm */
+  border-radius: 8px; /* Thêm bo tròn cho sản phẩm */
+  overflow: hidden; /* Đảm bảo không có phần tử nào tràn ra ngoài */
+}
+
+.product-item img {
+  width: 100%;
+  height: 200px; /* Giới hạn chiều cao để đảm bảo hình ảnh đồng đều */
+  object-fit: cover; /* Đảm bảo ảnh không bị méo */
+  border-bottom: 1px solid #ddd; /* Thêm đường phân cách giữa ảnh và nội dung */
+}
+
+.product-item:hover {
+  transform: scale(1.05);
+}
+
+.product-item h3 {
+  font-size: 1.2em;
+  margin: 10px;
+}
+
+.product-item p {
+  font-size: 1em;
+  color: #333;
+  margin: 0 10px 10px 10px;
+}

@@ -1,14 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+// Import các hàm từ CartApi.js
+import { getAllCartItems, removeCartItem, createCart } from '../../api/CartApi';
+
 import './Cart.css';
 
 function Cart() {
-  const cartItems = [
-    { id: 1, name: 'Men Product 1', price: '600,000₫', quantity: 2, image: '/images/men-product-1.jpg' },
-    { id: 2, name: 'Women Product 1', price: '700,000₫', quantity: 1, image: '/images/women-product-1.jpg' },
-  ];
+  const [cartItems, setCartItems] = useState([]);
 
+  useEffect(() => {
+    // Gọi API lấy tất cả các sản phẩm trong giỏ hàng khi component được render
+    getAllCartItems()
+      .then(data => {
+        setCartItems(data);
+      })
+      .catch(error => console.error('Error fetching cart items:', error));
+  }, []);
+
+  // Hàm tính tổng tiền
   const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + parseInt(item.price.replace(',', '').replace('₫', '')) * item.quantity, 0).toLocaleString() + '₫';
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toLocaleString() + '₫';
+  };
+
+  // Hàm xóa sản phẩm khỏi giỏ hàng
+  const handleRemoveItem = (itemId) => {
+    removeCartItem(itemId)
+      .then(() => {
+        // Cập nhật lại giỏ hàng sau khi xóa thành công
+        setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
+      })
+      .catch(error => console.error('Error removing cart item:', error));
+  };
+
+  // Hàm xử lý khi nhấn nút thanh toán (có thể gọi API tạo đơn hàng)
+  const handleCheckout = () => {
+    const cartData = { items: cartItems };
+    createCart(cartData)
+      .then(() => {
+        alert('Đơn hàng của bạn đã được tạo thành công!');
+      })
+      .catch(error => console.error('Error creating cart:', error));
   };
 
   return (
@@ -23,9 +53,11 @@ function Cart() {
               <img src={item.image} alt={item.name} className="cart-item-image" />
               <div className="cart-item-details">
                 <h4>{item.name}</h4>
-                <p>Giá: {item.price}</p>
+                <p>Giá: {item.price.toLocaleString()}₫</p>
                 <p>Số lượng: {item.quantity}</p>
-                <button className="remove-item-button">Xóa</button>
+                <button className="remove-item-button" onClick={() => handleRemoveItem(item.id)}>
+                  Xóa
+                </button>
               </div>
             </div>
           ))}
@@ -33,7 +65,9 @@ function Cart() {
       )}
       <div className="cart-summary">
         <h3>Tổng cộng: {getTotalPrice()}</h3>
-        <button className="checkout-button">Thanh Toán</button>
+        <button className="checkout-button" onClick={handleCheckout}>
+          Thanh Toán
+        </button>
       </div>
     </div>
   );

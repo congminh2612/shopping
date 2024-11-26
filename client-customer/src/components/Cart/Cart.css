@@ -1,62 +1,125 @@
+/* General Styles for Cart Page */
 .cart-page {
-    max-width: 800px;
-    margin: 100px auto 50px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 1000px; /* Mở rộng để phù hợp với màn hình lớn hơn */
+  width: 100%; /* Đảm bảo chiếm hết chiều ngang khi cần */
+  margin: 100px auto 50px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); /* Tăng độ sâu của bóng */
+  border-radius: 10px; /* Thêm bo tròn để trang trông mềm mại hơn */
+}
+
+/* Heading for Cart Page */
+.cart-page h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2em; /* Làm cho tiêu đề lớn hơn và rõ hơn */
+  color: #333;
+}
+
+/* Cart Items Container */
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Individual Cart Item Styling */
+.cart-item {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px; /* Bo góc mềm mại hơn */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease; /* Thêm hiệu ứng khi người dùng hover */
+}
+
+.cart-item:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Hiệu ứng khi người dùng hover vào sản phẩm */
+}
+
+/* Cart Item Image Styling */
+.cart-item-image {
+  width: 120px; /* Tăng kích thước để hình ảnh rõ hơn */
+  height: 120px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 20px;
+}
+
+/* Cart Item Details Styling */
+.cart-item-details {
+  flex: 1;
+  font-size: 1em; /* Làm cho nội dung sản phẩm trông đồng đều hơn */
+  color: #444;
+}
+
+/* Remove Button Styling */
+.remove-item-button {
+  background-color: #ff4c4c;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu khi hover */
+}
+
+.remove-item-button:hover {
+  background-color: #ff3333; /* Làm cho màu đỏ sáng hơn khi người dùng hover */
+}
+
+/* Cart Summary Styling */
+.cart-summary {
+  margin-top: 40px;
+  text-align: right;
+  font-size: 1.2em;
+  color: #333;
+}
+
+/* Checkout Button Styling */
+.checkout-button {
+  padding: 15px 30px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease; /* Thêm hiệu ứng hover */
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.checkout-button:hover {
+  background-color: #333; /* Làm cho nút checkout nổi bật hơn khi người dùng hover */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .cart-page {
+      padding: 15px;
   }
-  
-  .cart-page h2 {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  
-  .cart-items {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
+
   .cart-item {
-    display: flex;
-    background-color: white;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      flex-direction: column; /* Chuyển đổi sang dạng cột khi màn hình nhỏ */
+      text-align: center;
   }
-  
+
   .cart-item-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 5px;
-    margin-right: 20px;
+      margin-bottom: 15px;
+      margin-right: 0;
   }
-  
+
   .cart-item-details {
-    flex: 1;
+      margin-bottom: 15px;
   }
-  
-  .remove-item-button {
-    background-color: #ff4c4c;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 3px;
-  }
-  
+
   .cart-summary {
-    margin-top: 30px;
-    text-align: right;
+      text-align: center; /* Giữa phần tổng kết khi màn hình nhỏ */
   }
-  
+
   .checkout-button {
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
+      width: 100%; /* Cho nút chiếm toàn bộ chiều ngang trên màn hình nhỏ */
   }
-  
+}

@@ -1,21 +1,35 @@
-// src/components/AllProductsPage/index.js
-import React from 'react';
-import ProductList from '../ProductList/ProductList'; // Chỉnh sửa đường dẫn này
-
-const allProducts = [
-  // Các sản phẩm kết hợp
-  { id: 1, name: 'Men Product 1', price: '600,000', image: '/images/men_product1.jpg' },
-  { id: 2, name: 'Women Product 1', price: '650,000', image: '/images/women_product1.jpg' },
-  { id: 3, name: 'Kids Product 1', price: '500,000', image: '/images/kids_product1.jpg' },
-  { id: 4, name: 'Accessory 1', price: '300,000', image: '/images/accessory1.jpg' },
-  { id: 5, name: 'Men Product 2', price: '600,000', image: '/images/men_product2.jpg' },
-];
+import React, { useEffect, useState } from 'react';
+import { getAllProducts } from '../../api/userApi';
 
 function AllProductsPage() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    // Gọi API để lấy tất cả sản phẩm
+    getAllProducts()
+      .then(response => {
+        setProducts(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching products:', error);
+      });
+  }, []);
+
   return (
-    <div>
+    <div className="all-products-page">
       <h2>All Products</h2>
-      <ProductList products={allProducts} />
+      {products.length === 0 ? (
+        <p>No products found.</p>
+      ) : (
+        <div className="product-list">
+          {products.map(product => (
+            <div key={product.id} className="product-item">
+              <h4>{product.name}</h4>
+              <p>{product.price.toLocaleString()}₫</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

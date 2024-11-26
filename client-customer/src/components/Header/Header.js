@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faSearch, faShoppingCart, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSearch, faShoppingCart, faUser, faHeart } from '@fortawesome/free-solid-svg-icons';
 import './Header.css';
 import { Link } from 'react-router-dom';
 
@@ -30,6 +30,9 @@ function Header() {
           <Link to="/search" className="header-icon">
             <FontAwesomeIcon icon={faSearch} />
           </Link>
+          <Link to="/wishlist" className="header-icon">
+            <FontAwesomeIcon icon={faHeart} />
+          </Link>
           <Link to="/cart" className="header-icon">
             <FontAwesomeIcon icon={faShoppingCart} />
           </Link>
@@ -48,7 +51,6 @@ function Header() {
           <li><Link to="/products/women" onClick={() => setIsMenuOpen(false)}>Women</Link></li>
           <li><Link to="/products/outwear" onClick={() => setIsMenuOpen(false)}>Outwear</Link></li>
           <li><Link to="/products/accessories" onClick={() => setIsMenuOpen(false)}>Accessories</Link></li>
-          
         </ul>
       </div>
     </>

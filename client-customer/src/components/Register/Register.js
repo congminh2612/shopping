@@ -1,216 +1,237 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Register.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import API from "../../api/api";
+import "./Register.css";
 
-function Register() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    name: '',
-    birthday: '',
-    gender: 'male',
-    address: '',
-    city: '',
-    country: '',
-    role: 'user',
-  });
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+const Register = () => {
+    const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+    const [formData, setFormData] = useState({
+        gender: "",
+        name: "",
+        username: "",
+        email: "",
+        birthday: "",
+        password: "",
+        role: "user", // Role mặc định là 'user'
+    });
 
-  const handleRegister = async () => {
-    const { username, email, password, name, birthday, address, city, country } = formData;
+    const [error, setError] = useState("");
+    const [message, setMessage] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [passwordRequirements, setPasswordRequirements] = useState({
+        oneLowercase: false,
+        oneUppercase: false,
+        oneNumber: false,
+        oneSpecialChar: false,
+        minLength: false,
+    });
 
-    // Kiểm tra thông tin rỗng
-    if (!username || !email || !password || !name || !birthday || !address || !city || !country) {
-      setErrorMessage('Vui lòng điền đầy đủ thông tin!');
-      return;
-    }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
 
-    setErrorMessage('');
-    setIsLoading(true); // Hiển thị trạng thái loading
+        setFormData((prevState) => ({
+            ...prevState,
+            [name]: name === "username" ? value.replace(/^@/, "") : value,
+        }));
 
-    try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, role: 'user' }), // Mặc định role là user
-      });
+        if (name === "password") {
+            validatePassword(value);
+        }
+    };
 
-      const data = await response.json();
-      setIsLoading(false); // Dừng trạng thái loading
+    const validatePassword = (password) => {
+        const specialChars = /[~!@#$%^&*_\/\-+=`]/;
+        const requirements = {
+            oneLowercase: /[a-z]/.test(password), // Ít nhất 1 chữ cái thường
+            oneUppercase: /[A-Z]/.test(password), // Ít nhất 1 chữ cái hoa
+            oneNumber: /\d/.test(password), // Ít nhất 1 chữ số
+            oneSpecialChar: specialChars.test(password), // Ít nhất 1 ký tự đặc biệt
+            minLength: password.length >= 8, // Độ dài tối thiểu 8 ký tự
+        };
 
-      if (response.ok) {
-        alert('Đăng ký thành công!');
-        navigate('/login'); // Điều hướng tới trang đăng nhập
-      } else {
-        setErrorMessage(data.message || 'Đăng ký thất bại!'); // Hiển thị lỗi từ backend
-      }
-    } catch (error) {
-      setIsLoading(false);
-      setErrorMessage('Lỗi kết nối. Vui lòng thử lại sau!');
-    }
-  };
+        setPasswordRequirements(requirements);
+    };
 
-  return (
-    <div className="register-page">
-      <div className="register-container">
-        <h2>ĐĂNG KÝ</h2>
-        <form>
-          {/* Họ và tên */}
-          <div className="form-group">
-            <label htmlFor="name">Họ và tên:</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Nhập họ và tên"
-              required
-            />
-          </div>
+    const handleRegister = async () => {
+        try {
+            const payload = { ...formData };
+            const response = await API.post("/auth/register", payload);
+            setMessage(response.data.message || "Registration successful! Please verify your account.");
+            setError("");
 
-          {/* Ngày sinh */}
-          <div className="form-group">
-            <label htmlFor="birthday">Ngày sinh:</label>
-            <input
-              type="date"
-              id="birthday"
-              name="birthday"
-              value={formData.birthday}
-              onChange={handleChange}
-              required
-            />
-          </div>
+            localStorage.setItem("emailOrUsername", formData.email || formData.username);
 
-          {/* Username */}
-          <div className="form-group">
-            <label htmlFor="username">Username:</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="Nhập Username"
-              required
-            />
-          </div>
+            setTimeout(() => {
+                window.location.href = "/user/verify";
+            }, 2000);
+        } catch (err) {
+            setError(err.response?.data?.message || "Registration failed. Please try again.");
+            setMessage("");
+        }
+    };
 
-          {/* Email */}
-          <div className="form-group">
-            <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Nhập email"
-              required
-            />
-          </div>
+    return (
+        <div className="register-form">
+            <div className="register-navigation">
+                <a className="nav-link active" onClick={() => navigate("/user/login")}>
+                    ALREADY REGISTERED?
+                </a>
+                <a className="nav-link" onClick={() => navigate("/user/register")}>
+                    CREATE YOUR ACCOUNT
+                </a>
+            </div>
 
-          {/* Mật khẩu */}
-          <div className="form-group">
-            <label htmlFor="password">Mật khẩu:</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Nhập mật khẩu"
-              required
-            />
-          </div>
+            <div className="register-container">
+                {error && <p className="error-message">{error}</p>}
+                {message && <p className="success-message">{message}</p>}
+                <form>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder=" "
+                            value={formData.name}
+                            onChange={handleChange}
+                        />
+                        <label>Your Name *</label>
+                    </div>
 
-          {/* Giới tính */}
-          <div className="form-group">
-            <label htmlFor="gender">Giới tính:</label>
-            <select
-              id="gender"
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              required
-            >
-              <option value="male">Nam</option>
-              <option value="female">Nữ</option>
-              <option value="other">Khác</option>
-            </select>
-          </div>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder=" "
+                            value={formData.username ? `@${formData.username}` : ""}
+                            onChange={handleChange}
+                        />
+                        <label>Username *</label>
+                    </div>
 
-          {/* Địa chỉ */}
-          <div className="form-group">
-            <label htmlFor="address">Địa chỉ:</label>
-            <input
-              type="text"
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              placeholder="Nhập địa chỉ"
-              required
-            />
-          </div>
+                    <div className="gender-group">
+                        <label className="form-label">Gender *</label>
+                        <div className="gender-options">
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="gender"
+                                    value="Male"
+                                    onChange={handleChange}
+                                />
+                                Male
+                            </label>
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="gender"
+                                    value="Female"
+                                    onChange={handleChange}
+                                />
+                                Female
+                            </label>
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="gender"
+                                    value="Non-binary"
+                                    onChange={handleChange}
+                                />
+                                Non-binary
+                            </label>
+                        </div>
+                    </div>
 
-          {/* Thành phố */}
-          <div className="form-group">
-            <label htmlFor="city">Thành phố:</label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              placeholder="Nhập thành phố"
-              required
-            />
-          </div>
+                    <div className="input-group">
+                        <input
+                            type="date"
+                            name="birthday"
+                            value={formData.birthday}
+                            onChange={handleChange}
+                        />
+                        <label>Day of birth *</label>
+                    </div>
 
-          {/* Quốc gia */}
-          <div className="form-group">
-            <label htmlFor="country">Quốc gia:</label>
-            <input
-              type="text"
-              id="country"
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              placeholder="Nhập quốc gia"
-              required
-            />
-          </div>
+                    <div className="input-group">
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder=" "
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
+                        <label>Email Address *</label>
+                    </div>
 
-          {/* Hiển thị lỗi */}
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
+                    <div className="password-requirements">
+                        <label className="requirements-title">Password Requirements</label>
+                        <ul>
+                            <li className={passwordRequirements.oneLowercase ? "valid" : "invalid"}>
+                                <FontAwesomeIcon
+                                    icon={passwordRequirements.oneLowercase ? faCheck : faTimes}
+                                    className="requirement-icon"
+                                />
+                                At least one lowercase character
+                            </li>
+                            <li className={passwordRequirements.oneUppercase ? "valid" : "invalid"}>
+                                <FontAwesomeIcon
+                                    icon={passwordRequirements.oneUppercase ? faCheck : faTimes}
+                                    className="requirement-icon"
+                                />
+                                At least one uppercase character
+                            </li>
+                            <li className={passwordRequirements.oneNumber ? "valid" : "invalid"}>
+                                <FontAwesomeIcon
+                                    icon={passwordRequirements.oneNumber ? faCheck : faTimes}
+                                    className="requirement-icon"
+                                />
+                                At least one number
+                            </li>
+                            <li className={passwordRequirements.oneSpecialChar ? "valid" : "invalid"}>
+                                <FontAwesomeIcon
+                                    icon={passwordRequirements.oneSpecialChar ? faCheck : faTimes}
+                                    className="requirement-icon"
+                                />
+                                At least one special character (~!@#$%^&*_ /-+=`)
+                            </li>
+                            <li className={passwordRequirements.minLength ? "valid" : "invalid"}>
+                                <FontAwesomeIcon
+                                    icon={passwordRequirements.minLength ? faCheck : faTimes}
+                                    className="requirement-icon"
+                                />
+                                Minimum 8 characters
+                            </li>
+                        </ul>
+                    </div>
 
-          {/* Hiển thị trạng thái đăng ký */}
-          {isLoading ? (
-            <p>Đang đăng ký...</p>
-          ) : (
-            <button type="button" onClick={handleRegister} className="register-button">
-              Đăng ký
-            </button>
-          )}
-        </form>
-        <div className="extra-links">
-          <a href="/login">Đã có tài khoản? Đăng nhập</a>
+                    <div className="input-group">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            placeholder=" "
+                            value={formData.password}
+                            onChange={handleChange}
+                        />
+                        <label>Password *</label>
+                        <FontAwesomeIcon
+                            icon={showPassword ? faEyeSlash : faEye}
+                            className="password-icon"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                        />
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={handleRegister}
+                        disabled={!Object.values(passwordRequirements).every((req) => req)}
+                    >
+                        Register
+                    </button>
+                </form>
+            </div>
         </div>
-      </div>
-    </div>
-  );
-}
+    );
+};
 
 export default Register;

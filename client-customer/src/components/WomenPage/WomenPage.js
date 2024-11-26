@@ -1,23 +1,41 @@
 // src/components/WomenPage/WomenPage.js
 import React, { useEffect, useState } from 'react';
-import ProductList from '../ProductList/ProductList';
+import { getProductsByCategory } from '../../api/productApi';
 
 function WomenPage() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Tạm thời sử dụng dữ liệu mock
-    const mockData = [
-      { id: 1, name: 'Women Product 1', price: '800,000', image: 'https://via.placeholder.com/400', description: 'Description for women product 1' },
-      { id: 2, name: 'Women Product 2', price: '900,000', image: 'https://via.placeholder.com/400', description: 'Description for women product 2' }
-    ];
-    setProducts(mockData);
+    const fetchProducts = async () => {
+      try {
+        const data = await getProductsByCategory('women');
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching women products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div>
+    <div className="products-page">
       <h2>Women Products</h2>
-      <ProductList products={products} />
+      <ul className="products-list">
+        {products.map((product) => (
+          <li key={product.id}>
+            <div>{product.name}</div>
+            <div>Price: {product.price}₫</div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

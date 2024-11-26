@@ -1,23 +1,41 @@
 // src/components/AccessoriesPage/AccessoriesPage.js
 import React, { useEffect, useState } from 'react';
-import ProductList from '../ProductList/ProductList';
+import { getProductsByCategory } from '../../api/productApi';
 
 function AccessoriesPage() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Tạm thời sử dụng dữ liệu mock cho phát triển
-    const mockData = [
-      { id: 1, name: 'Accessory Product 1', price: '500,000', image: 'https://via.placeholder.com/400', description: 'Description for accessory product 1' },
-      { id: 2, name: 'Accessory Product 2', price: '600,000', image: 'https://via.placeholder.com/400', description: 'Description for accessory product 2' }
-    ];
-    setProducts(mockData);
+    const fetchProducts = async () => {
+      try {
+        const data = await getProductsByCategory('accessories');
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching accessories products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div>
+    <div className="products-page">
       <h2>Accessories Products</h2>
-      <ProductList products={products} />
+      <ul className="products-list">
+        {products.map((product) => (
+          <li key={product.id}>
+            <div>{product.name}</div>
+            <div>Price: {product.price}₫</div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
