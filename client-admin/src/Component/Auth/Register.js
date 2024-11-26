@@ -14,7 +14,7 @@ const Register = () => {
     name: "",
     username: "",
     email: "",
-    birthday: "",
+    birthday: "", // Ensure the initial value is empty
     password: "",
     role: "admin",
   });
@@ -32,10 +32,23 @@ const Register = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: name === "username" ? value.replace(/^@/, "") : value,
-    }));
+    setFormData((prevState) => {
+      let updatedValue = value;
+
+      // Auto-add '@' for username and ensure '@' is removed if input is empty
+      if (name === "username") {
+        if (value.trim() === "" || value === "@") {
+          updatedValue = ""; // Remove '@' when input is empty or only '@' is present
+        } else if (!value.startsWith("@")) {
+          updatedValue = `@${value}`; // Add '@' if not present
+        }
+      }
+
+      return {
+        ...prevState,
+        [name]: updatedValue,
+      };
+    });
 
     if (name === "password") {
       validatePassword(value);
@@ -57,7 +70,12 @@ const Register = () => {
 
   const handleRegister = async () => {
     try {
-      const payload = { ...formData };
+      const payload = {
+        ...formData,
+        username: formData.username, // Ensure '@' is sent with username
+      };
+      console.log("Payload being sent:", payload);
+
       const response = await API.post("/auth/register", payload);
       setMessage(
         response.data.message ||
@@ -112,7 +130,7 @@ const Register = () => {
               type="text"
               name="username"
               placeholder=" "
-              value={formData.username ? `@${formData.username}` : ""}
+              value={formData.username}
               onChange={handleChange}
             />
             <label>Username *</label>
@@ -122,8 +140,9 @@ const Register = () => {
             <input
               type="date"
               name="birthday"
-              value={formData.birthday}
+              value={formData.birthday} // Controlled value from state
               onChange={handleChange}
+              placeholder="YYYY-MM-DD" // Placeholder text (for unsupported browsers)
             />
             <label>Day of birth *</label>
           </div>

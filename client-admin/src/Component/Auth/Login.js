@@ -7,10 +7,10 @@ import API from "../../api/api";
 import "./Login.css";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [emailOrUsername, setEmailOrUsername] = useState(""); // Support for email or username
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [forgotEmailOrUsername, setForgotEmailOrUsername] = useState("");
   const [isForgotPasswordModalOpen, setForgotPasswordModalOpen] =
     useState(false);
   const [error, setError] = useState("");
@@ -20,14 +20,13 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (!email || !password) {
-        setError("Vui lòng nhập email và mật khẩu!");
+      if (!emailOrUsername || !password) {
+        setError("Vui lòng nhập email/username và mật khẩu!");
         return;
       }
-      const response = await API.post("/auth/login", {
-        email,
-        password,
-      });
+      const payload = { emailOrUsername, password }; // Adjust payload
+      console.log("Payload being sent for login:", payload);
+      const response = await API.post("/auth/login", payload);
       console.log("Đăng nhập thành công:", response.data);
       alert("Đăng nhập thành công!");
       navigate("/admin/home");
@@ -38,7 +37,7 @@ function Login() {
 
   const openForgotPasswordModal = () => {
     setForgotPasswordModalOpen(true);
-    setForgotPasswordEmail("");
+    setForgotEmailOrUsername("");
     setError("");
   };
 
@@ -50,13 +49,15 @@ function Login() {
   const handleForgotPasswordSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (!forgotPasswordEmail) {
-        setError("Vui lòng nhập email để nhận hướng dẫn đặt lại mật khẩu!");
+      if (!forgotEmailOrUsername) {
+        setError(
+          "Vui lòng nhập email/username để nhận hướng dẫn đặt lại mật khẩu!"
+        );
         return;
       }
-      await API.post("/auth/request-password-reset", {
-        email: forgotPasswordEmail,
-      });
+      const payload = { emailOrUsername: forgotEmailOrUsername };
+      console.log("Payload being sent for forgot password:", payload);
+      await API.post("/auth/request-password-reset", payload);
       alert("Hướng dẫn đặt lại mật khẩu đã được gửi đến email của bạn.");
       closeForgotPasswordModal();
     } catch (error) {
@@ -87,14 +88,14 @@ function Login() {
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text" // Use type="text" to support both email and username
+              id="emailOrUsername"
+              value={emailOrUsername}
+              onChange={(e) => setEmailOrUsername(e.target.value)}
               placeholder=" "
               required
             />
-            <label htmlFor="email">Email address*</label>
+            <label htmlFor="emailOrUsername">Email or Username*</label>
           </div>
           <div className="input-group">
             <input
@@ -134,18 +135,20 @@ function Login() {
               &times;
             </button>
             <h2>Forgot Your Password?</h2>
-            <p>Enter your email to reset your password.</p>
+            <p>Enter your email or username to reset your password.</p>
             <form onSubmit={handleForgotPasswordSubmit}>
               <div className="input-group">
                 <input
-                  type="email"
-                  id="forgot-password-email"
-                  value={forgotPasswordEmail}
-                  onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                  type="text"
+                  id="forgot-emailOrUsername"
+                  value={forgotEmailOrUsername}
+                  onChange={(e) => setForgotEmailOrUsername(e.target.value)}
                   placeholder=" "
                   required
                 />
-                <label htmlFor="forgot-password-email">Email address*</label>
+                <label htmlFor="forgot-emailOrUsername">
+                  Email or Username*
+                </label>
               </div>
               {error && <p className="error-message">{error}</p>}
               <button type="submit" className="submit-button">
