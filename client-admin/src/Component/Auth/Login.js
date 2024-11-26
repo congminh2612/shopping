@@ -24,13 +24,10 @@ function Login() {
         setError("Vui lòng nhập email và mật khẩu!");
         return;
       }
-      const response = await API.post(
-        "/auth/login",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await API.post("/auth/login", {
+        email,
+        password,
+      });
       console.log("Đăng nhập thành công:", response.data);
       alert("Đăng nhập thành công!");
       navigate("/admin/home");
@@ -57,12 +54,9 @@ function Login() {
         setError("Vui lòng nhập email để nhận hướng dẫn đặt lại mật khẩu!");
         return;
       }
-      await API.post(
-        "/auth/request-password-reset",
-        {
-          email: forgotPasswordEmail,
-        }
-      );
+      await API.post("/auth/request-password-reset", {
+        email: forgotPasswordEmail,
+      });
       alert("Hướng dẫn đặt lại mật khẩu đã được gửi đến email của bạn.");
       closeForgotPasswordModal();
     } catch (error) {
@@ -80,7 +74,9 @@ function Login() {
           Already Registered?
         </h2>
         <h2
-          className={location.pathname === "/admin/register" ? "active-link" : ""}
+          className={
+            location.pathname === "/admin/register" ? "active-link" : ""
+          }
           onClick={() => navigate("/admin/register")}
         >
           Create Your Account
