@@ -22,11 +22,11 @@ const validateRegister = [
       }
       return true;
     }),
-  check("gender").notEmpty().withMessage("Gender is required"),
-  check("address").notEmpty().withMessage("Address is required"),
-  check("city").notEmpty().withMessage("City is required"),
-  check("country").notEmpty().withMessage("Country is required"),
-  check("name").notEmpty().withMessage("Name is required"),
+  // check("gender").notEmpty().withMessage("Gender is required"),
+  // check("address").notEmpty().withMessage("Address is required"),
+  // check("city").notEmpty().withMessage("City is required"),
+  // check("country").notEmpty().withMessage("Country is required"),
+  // check("name").notEmpty().withMessage("Name is required"),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

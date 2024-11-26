@@ -7,18 +7,7 @@ const hashPassword = require("../utils/hashPassword");
 const generateResetToken = require("../utils/generateResetToken");
 
 exports.register = async (req, res) => {
-  const {
-    name,
-    email,
-    birthday,
-    username,
-    password,
-    role,
-    gender,
-    address,
-    city,
-    country,
-  } = req.body;
+  const { name, email, birthday, username, password, role } = req.body;
   try {
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
@@ -35,10 +24,6 @@ exports.register = async (req, res) => {
       username,
       password: hashedPassword,
       role: role || "user",
-      gender: gender || "other",
-      address,
-      city,
-      country,
       verificationCode: code,
       verificationExpiry: expiry,
       isActive: false,
