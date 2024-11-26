@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faBars,faBoxOpen,faList,faUsers,faShoppingCart} from "@fortawesome/free-solid-svg-icons";
-import API from "../../api/api"; 
+import {
+  faBars,
+  faBoxOpen,
+  faList,
+  faUsers,
+  faShoppingCart,
+} from "@fortawesome/free-solid-svg-icons";
+import API from "../../api/api";
 import "./Home.css";
 
 function Home() {
@@ -29,18 +35,19 @@ function Home() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [productsRes, categoriesRes, usersRes, ordersRes] = await Promise.all([
-          API.get("/admin/products"),
-          API.get("/admin/categories"), 
-          API.get("/admin/users"), 
-          API.get("/cart"),
-        ]);
+        const [productsRes, categoriesRes, usersRes, ordersRes] =
+          await Promise.all([
+            API.get("/admin/products"),
+            API.get("/admin/categories"),
+            API.get("/admin/users"),
+            API.get("/cart"),
+          ]);
 
         setDashboardData({
           totalProducts: productsRes.data.length,
           totalCategories: categoriesRes.data.length,
-          totalUsers: usersRes.data.length, 
-          processingOrders: ordersRes.data.length, 
+          totalUsers: usersRes.data.length,
+          processingOrders: ordersRes.data.length,
         });
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
@@ -67,10 +74,18 @@ function Home() {
               </button>
               <ul className="menu-list">
                 <li onClick={() => navigate("/admin/home")}>Dashboard</li>
-                <li onClick={() => navigate("/admin/products")}>Quản lý sản phẩm</li>
-                <li onClick={() => navigate("/admin/categories")}>Quản lý mục lục</li>
-                <li onClick={() => navigate("/admin/users")}>Quản lý người dùng</li>
-                <li onClick={() => navigate("/admin/orders")}>Quản lý đơn hàng</li>
+                <li onClick={() => navigate("/admin/products")}>
+                  Quản lý sản phẩm
+                </li>
+                <li onClick={() => navigate("/admin/categories")}>
+                  Quản lý mục lục
+                </li>
+                <li onClick={() => navigate("/admin/users")}>
+                  Quản lý người dùng
+                </li>
+                <li onClick={() => navigate("/admin/orders")}>
+                  Quản lý đơn hàng
+                </li>
               </ul>
             </div>
           )}

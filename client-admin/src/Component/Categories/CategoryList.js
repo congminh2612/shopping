@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import CategoryForm from "./CategoryForm";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash, faPlus, faBars } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faTrash,
+  faPlus,
+  faBars,
+} from "@fortawesome/free-solid-svg-icons";
 import "./Categories.css";
 import API from "../../api/api";
 
@@ -104,10 +109,18 @@ function CategoryList() {
               </button>
               <ul className="menu-list">
                 <li onClick={() => navigate("/admin/home")}>Dashboard</li>
-                <li onClick={() => navigate("/admin/products")}>Quản lý sản phẩm</li>
-                <li onClick={() => navigate("/admin/categories")}>Quản lý mục lục</li>
-                <li onClick={() => navigate("/admin/users")}>Quản lý người dùng</li>
-                <li onClick={() => navigate("/admin/orders")}>Quản lý đơn hàng</li>
+                <li onClick={() => navigate("/admin/products")}>
+                  Quản lý sản phẩm
+                </li>
+                <li onClick={() => navigate("/admin/categories")}>
+                  Quản lý mục lục
+                </li>
+                <li onClick={() => navigate("/admin/users")}>
+                  Quản lý người dùng
+                </li>
+                <li onClick={() => navigate("/admin/orders")}>
+                  Quản lý đơn hàng
+                </li>
               </ul>
             </div>
           )}

@@ -1,68 +1,51 @@
-import React, { useState } from 'react';
-import axios from 'axios'; // Bạn có thể dùng axios trực tiếp hoặc file searchApi.js đã tạo trước đó.
-import './Search.css';
+import React, { useState, useEffect } from "react";
+import API from "../../api/api"; // Axios instance
+import "./Search.css";
 
-function SearchPage() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [category, setCategory] = useState('');
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
+function Search() {
+  const [searchIerm, setSearchIerm] = useState("");
+  const [category, setCategory] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
   const [inStock, setInStock] = useState(false);
   const [results, setResults] = useState([]);
 
-  const handleSearch = () => {
-    let apiUrl = 'http://localhost:3000/api/products';
+  // Hàm xử lý tìm kiếm
+  const handleSearch = async () => {
+    try {
+      const params = {};
+      if (searchIerm) params.search = searchIerm;
+      if (category) params.category = category;
+      if (minPrice) params.minPrice = minPrice;
+      if (maxPrice) params.maxPrice = maxPrice;
+      if (inStock) params.inStock = true;
 
-    // Tạo các query params
-    const params = [];
-
-    if (searchTerm) {
-      params.push(`search=${searchTerm}`);
+      const response = await API.get("/user/products", { params });
+      setResults(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setResults([]); // Trả về mảng rỗng nếu có lỗi
     }
-    
-    if (category) {
-      params.push(`category=${category}`);
-    }
-
-    if (minPrice) {
-      params.push(`minPrice=${minPrice}`);
-    }
-
-    if (maxPrice) {
-      params.push(`maxPrice=${maxPrice}`);
-    }
-
-    if (inStock) {
-      params.push(`inStock=${inStock}`);
-    }
-
-    // Ghép tất cả các query params vào URL
-    if (params.length > 0) {
-      apiUrl += `?${params.join('&')}`;
-    }
-
-    // Gửi yêu cầu với Axios
-    axios.get(apiUrl)
-      .then(response => {
-        setResults(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching search results:', error);
-        setResults(["Không tìm thấy kết quả nào"]);
-      });
   };
+
+  // Lắng nghe thay đổi từ các input và tự động gọi handleSearch
+  useEffect(() => {
+    handleSearch();
+  }, [searchIerm, category, minPrice, maxPrice, inStock]);
 
   return (
     <div className="search-container">
-      {/* Hộp tìm kiếm */}
       <div className="search-box">
+        {/* Input tìm kiếm */}
         <input
           type="text"
           className="search-input"
           placeholder="Search for products..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchIerm}
+          onChange={(e) => setSearchIerm(e.target.value)}
         />
+
+        {/* Dropdown chọn danh mục */}
         <select
           className="category-select"
           value={category}
@@ -73,6 +56,8 @@ function SearchPage() {
           <option value="Clothes">Clothes</option>
           <option value="Shoes">Shoes</option>
         </select>
+
+        {/* Input giá */}
         <input
           type="number"
           className="price-input"
@@ -87,6 +72,8 @@ function SearchPage() {
           value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)}
         />
+
+        {/* Checkbox hàng tồn kho */}
         <label>
           <input
             type="checkbox"
@@ -95,26 +82,25 @@ function SearchPage() {
           />
           In Stock Only
         </label>
-        <button className="search-button" onClick={handleSearch}>Search</button>
       </div>
 
-      {/* Kết quả tìm kiếm */}
+      {/* Hiển thị kết quả */}
       <div className="search-results">
         {results.length > 0 ? (
           results.map((result, index) => (
             <div key={index} className="result-item">
               <h4>{result.name}</h4>
-              <p>Giá: {result.price.toLocaleString()}₫</p>
-              <p>Danh mục: {result.category}</p>
-              <p>Tình trạng: {result.inStock ? 'Còn hàng' : 'Hết hàng'}</p>
+              <p>Price: {result.price.toLocaleString()}₫</p>
+              <p>Category: {result.category}</p>
+              <p>Status: {result.inStock ? "In Stock" : "Out of Stock"}</p>
             </div>
           ))
         ) : (
-          <p>Không tìm thấy kết quả nào</p>
+          <p>No results found</p>
         )}
       </div>
     </div>
   );
 }
 
-export default SearchPage;
+export default Search;

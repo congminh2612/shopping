@@ -17,8 +17,8 @@ import OrderList from "../Component/Orders/OrderList";
 import Verify from "../Component/Auth/Verify";
 
 const routes = [
-  { path: "/", element: <Navigate to="/admin/login" /> },
-  // { path: "/", element: <Home /> },
+  // { path: "/", element: <Navigate to="/admin/login" /> },
+  { path: "/", element: <Home /> },
   { path: "/admin/login", element: <Login /> },
   { path: "/admin/register", element: <Register /> },
   { path: "/admin/verify", element: <Verify /> },
