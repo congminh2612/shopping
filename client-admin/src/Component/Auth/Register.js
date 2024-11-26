@@ -17,7 +17,6 @@ const Register = () => {
         email: "",
         birthday: "",
         password: "",
-        confirmPassword: "",
         address: "",
         city: "",
         country: "",
@@ -25,7 +24,6 @@ const Register = () => {
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [passwordRequirements, setPasswordRequirements] = useState({
         oneLowercase: false,
         oneUppercase: false,
@@ -235,21 +233,7 @@ const Register = () => {
                         />
                     </div>
 
-                    <div className="input-group">
-                        <input
-                            type={showConfirmPassword ? "text" : "password"}
-                            name="confirmPassword"
-                            placeholder=" "
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                        />
-                        <label>Confirm Password *</label>
-                        <FontAwesomeIcon
-                            icon={showConfirmPassword ? faEyeSlashRegular : faEye}
-                            className="password-icon"
-                            onClick={() => setShowConfirmPassword((prev) => !prev)}
-                        />
-                    </div>
+            
 
                     <div className="input-group">
                         <input
