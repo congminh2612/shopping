@@ -26,7 +26,7 @@ const Verify = () => {
       );
       setError("");
       setTimeout(() => {
-        window.location.href = "/admin/login";
+        window.location.href = "/user/login";
       }, 2000);
     } catch (err) {
       setError(

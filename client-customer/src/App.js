@@ -12,6 +12,7 @@ import ProductDetail from './components/ProductDetail/ProductDetail';
 import WishlistPage from './components/Wishlist/Wishlist';
 import RequestPasswordReset from './components/RequestPasswordReset/RequestPasswordReset';
 import ResetPassword from './components/ResetPassword/ResetPassword';
+import Verify from './components/Verify/Verify';  // Import Verify
 import './App.css';
 
 function App() {
@@ -36,11 +37,12 @@ function App() {
             <Route path="/cart" element={<CartPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/user/register" element={<Register />} /> {/* Thay đổi đường dẫn thành /user/register */}
+            <Route path="/user/register" element={<Register />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/request-password-reset" element={<RequestPasswordReset />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/verify" element={<Verify />} /> {/* Route Verify */}
           </Routes>
         </main>
 

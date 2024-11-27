@@ -29,7 +29,7 @@ const ResetPassword = () => {
       );
       setSuccess("Password reset successful!");
       setError("");
-      setTimeout(() => navigate("/login"), 2000);
+      setTimeout(() => navigate("/user/login"), 2000);
     } catch (err) {
       setError(err.response?.data?.message || "Error resetting password");
       setSuccess("");
@@ -76,7 +76,7 @@ const ResetPassword = () => {
           <button
             type="button"
             className="cancel-button"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/admin/login")}
           >
             Cancel
           </button>
