@@ -89,7 +89,7 @@ const Register = () => {
       );
 
       setTimeout(() => {
-        window.location.href = "/user/verify";
+        window.location.href = "/verify";
       }, 2000);
     } catch (err) {
       setError(
@@ -102,10 +102,10 @@ const Register = () => {
   return (
     <div className="register-form">
       <div className="register-navigation">
-        <a className="nav-link active" onClick={() => navigate("/user/login")}>
+        <a className="nav-link active" onClick={() => navigate("/login")}>
           ALREADY REGISTERED?
         </a>
-        <a className="nav-link" onClick={() => navigate("/user/register")}>
+        <a className="nav-link" onClick={() => navigate("/register")}>
           CREATE YOUR ACCOUNT
         </a>
       </div>
