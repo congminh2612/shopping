@@ -6,11 +6,11 @@ const {
   removeCartItem,
   clearCart,
 } = require("../controllers/cartController");
-const authenticateUser = require("../middleware/authenticateUser");
+const { authenticate } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-router.use(authenticateUser);
+router.use(authenticate);
 
 router.post("/", addItemToCart);
 router.get("/", getCart);

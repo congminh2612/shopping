@@ -5,11 +5,11 @@ const {
   removeItemFromWishlist,
   clearWishlist,
 } = require("../controllers/wishlistController");
-const authenticateUser = require("../middleware/authenticateUser");
+const { authenticate } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-router.use(authenticateUser);
+router.use(authenticate);
 
 router.post("/", addItemToWishlist);
 router.get("/", getWishlist);
