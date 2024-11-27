@@ -14,7 +14,6 @@ import ProductForm from "./ProductForm";
 function ProductList() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -31,14 +30,13 @@ function ProductList() {
 
   useEffect(() => {
     fetchProducts();
-    fetchCategories();
   }, []);
 
   // Fetch products from API
   const fetchProducts = async () => {
     try {
       const response = await API.get("/admin/products");
-      console.log("Fetched products:", response.data); // Debug log
+      console.log("Products:", response.data); // Debug log sản phẩm
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -49,19 +47,12 @@ function ProductList() {
     }
   };
 
-  // Fetch categories from API
-  const fetchCategories = async () => {
-    try {
-      const response = await API.get("/admin/categories");
-      console.log("Fetched categories:", response.data); // Debug log
-      setCategories(response.data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      if (error.response?.status === 401) {
-        alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-        navigate("/admin/login");
-      }
+  // Helper function to get category name
+  const getCategoryName = (product) => {
+    if (!product.category || !product.category.name) {
+      return "Không xác định"; // Nếu không có danh mục
     }
+    return product.category.name; // Lấy trực tiếp tên danh mục
   };
 
   // Add or edit product
@@ -108,7 +99,6 @@ function ProductList() {
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Clear token on logout
-    console.log("Đăng xuất thành công");
     navigate("/admin/login");
   };
 
@@ -200,10 +190,7 @@ function ProductList() {
                   <td>{product.name}</td>
                   <td>{product.price}₫</td>
                   <td>{product.stock}</td>
-                  <td>
-                    {categories.find((cat) => cat._id === product.categoryId)
-                      ?.name || "Không xác định"}
-                  </td>
+                  <td>{getCategoryName(product)}</td> {/* Sửa ở đây */}
                   <td>
                     <button
                       className="action-icon"
@@ -232,7 +219,6 @@ function ProductList() {
       {isFormOpen && (
         <ProductForm
           product={selectedProduct}
-          categories={categories}
           onSave={handleSaveProduct}
           onCancel={handleCancel}
         />
