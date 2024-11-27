@@ -17,7 +17,7 @@ const Verify = () => {
 
   const handleVerify = async () => {
     try {
-      const response = await API.post("/auth/verify", {
+      const response = await API.post("/user/verify", {
         email: emailOrUsername,
         code: verificationCode,
       });
@@ -26,7 +26,7 @@ const Verify = () => {
       );
       setError("");
       setTimeout(() => {
-        window.location.href = "/user/login";
+        window.location.href = "/login";
       }, 2000);
     } catch (err) {
       setError(

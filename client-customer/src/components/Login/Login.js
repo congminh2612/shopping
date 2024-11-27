@@ -29,7 +29,7 @@ function Login() {
         localStorage.setItem("token", response.data.token); // Lưu token
         console.log("Token saved:", response.data.token);
         alert("Đăng nhập thành công!");
-        navigate("/admin/home");
+        navigate("/user/home");
       } else {
         throw new Error("No token returned from server");
       }

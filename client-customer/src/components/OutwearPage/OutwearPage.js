@@ -1,43 +1,14 @@
 // src/components/OutwearPage/OutwearPage.js
-import React, { useEffect, useState } from 'react';
-import { getProductsByCategory } from '../../api/productApi';
+import React from "react";
+import ProductList from "../ProductList/ProductList";
 
-function OutwearPage() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getProductsByCategory('outwear');
-        setProducts(data);
-      } catch (error) {
-        console.error('Error fetching outwear products:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
+const OutwearPage = () => {
   return (
-    <div className="products-page">
-      <h2>Outwear Products</h2>
-      <ul className="products-list">
-        {products.map((product) => (
-          <li key={product.id}>
-            <div>{product.name}</div>
-            <div>Price: {product.price}₫</div>
-          </li>
-        ))}
-      </ul>
+    <div>
+      <h1>Outwear</h1>
+      <ProductList category="outwear" /> {/* Truyền vào danh mục "outwear" */}
     </div>
   );
-}
+};
 
 export default OutwearPage;
