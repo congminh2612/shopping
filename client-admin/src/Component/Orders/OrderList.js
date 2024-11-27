@@ -84,10 +84,18 @@ function OrderList() {
               </button>
               <ul className="menu-list">
                 <li onClick={() => navigate("/admin/home")}>Dashboard</li>
-                <li onClick={() => navigate("/admin/products")}>Quản lý sản phẩm</li>
-                <li onClick={() => navigate("/admin/categories")}>Quản lý mục lục</li>
-                <li onClick={() => navigate("/admin/users")}>Quản lý người dùng</li>
-                <li onClick={() => navigate("/admin/orders")}>Quản lý đơn hàng</li>
+                <li onClick={() => navigate("/admin/products")}>
+                  Quản lý sản phẩm
+                </li>
+                <li onClick={() => navigate("/admin/categories")}>
+                  Quản lý mục lục
+                </li>
+                <li onClick={() => navigate("/admin/users")}>
+                  Quản lý người dùng
+                </li>
+                <li onClick={() => navigate("/admin/orders")}>
+                  Quản lý đơn hàng
+                </li>
               </ul>
             </div>
           )}
