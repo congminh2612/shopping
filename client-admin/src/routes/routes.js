@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Home from "../Component/Home/Home";
 import Login from "../Component/Auth/Login";
 import Register from "../Component/Auth/Register";
@@ -23,6 +18,7 @@ const routes = [
   { path: "/admin/register", element: <Register /> },
   { path: "/admin/verify", element: <Verify /> },
   // request pass reset
+  { path: "/admin/request-password-reset", element: <RequestPasswordReset /> },
   { path: "/admin/resetpassword", element: <ResetPassword /> },
   { path: "/admin/home", element: <Home /> },
   { path: "/admin/products", element: <ProductList /> },

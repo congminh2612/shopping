@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faEdit, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faEdit,
+  faTrash,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import API from "../../api/api";
 import "./Products.css";
 import ProductForm from "./ProductForm";
@@ -15,6 +20,15 @@ function ProductList() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
+  // Check token and redirect to login if not available
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Bạn cần đăng nhập trước!");
+      navigate("/admin/login");
+    }
+  }, [navigate]);
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
@@ -24,9 +38,14 @@ function ProductList() {
   const fetchProducts = async () => {
     try {
       const response = await API.get("/admin/products");
+      console.log("Fetched products:", response.data); // Debug log
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
+      if (error.response?.status === 401) {
+        alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        navigate("/admin/login");
+      }
     }
   };
 
@@ -34,9 +53,14 @@ function ProductList() {
   const fetchCategories = async () => {
     try {
       const response = await API.get("/admin/categories");
+      console.log("Fetched categories:", response.data); // Debug log
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
+      if (error.response?.status === 401) {
+        alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        navigate("/admin/login");
+      }
     }
   };
 
@@ -83,6 +107,7 @@ function ProductList() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("token"); // Clear token on logout
     console.log("Đăng xuất thành công");
     navigate("/admin/login");
   };
@@ -108,10 +133,18 @@ function ProductList() {
               </button>
               <ul className="menu-list">
                 <li onClick={() => navigate("/admin/home")}>Dashboard</li>
-                <li onClick={() => navigate("/admin/products")}>Quản lý sản phẩm</li>
-                <li onClick={() => navigate("/admin/categories")}>Quản lý mục lục</li>
-                <li onClick={() => navigate("/admin/users")}>Quản lý người dùng</li>
-                <li onClick={() => navigate("/admin/orders")}>Quản lý đơn hàng</li>
+                <li onClick={() => navigate("/admin/products")}>
+                  Quản lý sản phẩm
+                </li>
+                <li onClick={() => navigate("/admin/categories")}>
+                  Quản lý mục lục
+                </li>
+                <li onClick={() => navigate("/admin/users")}>
+                  Quản lý người dùng
+                </li>
+                <li onClick={() => navigate("/admin/orders")}>
+                  Quản lý đơn hàng
+                </li>
               </ul>
             </div>
           )}
@@ -160,32 +193,38 @@ function ProductList() {
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
-              <tr key={product.id}>
-                <td>{product.id}</td>
-                <td>{product.name}</td>
-                <td>{product.price}₫</td>
-                <td>{product.stock}</td>
-                <td>
-                  {categories.find((cat) => cat.id === product.categoryId)?.name ||
-                    "Không xác định"}
-                </td>
-                <td>
-                  <button
-                    className="action-icon"
-                    onClick={() => handleEditProduct(product)}
-                  >
-                    <FontAwesomeIcon icon={faEdit} title="Sửa" />
-                  </button>
-                  <button
-                    className="action-icon"
-                    onClick={() => handleDeleteProduct(product.id)}
-                  >
-                    <FontAwesomeIcon icon={faTrash} title="Xóa" />
-                  </button>
-                </td>
+            {products.length > 0 ? (
+              products.map((product) => (
+                <tr key={product._id}>
+                  <td>{product._id}</td>
+                  <td>{product.name}</td>
+                  <td>{product.price}₫</td>
+                  <td>{product.stock}</td>
+                  <td>
+                    {categories.find((cat) => cat._id === product.categoryId)
+                      ?.name || "Không xác định"}
+                  </td>
+                  <td>
+                    <button
+                      className="action-icon"
+                      onClick={() => handleEditProduct(product)}
+                    >
+                      <FontAwesomeIcon icon={faEdit} title="Sửa" />
+                    </button>
+                    <button
+                      className="action-icon"
+                      onClick={() => handleDeleteProduct(product._id)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} title="Xóa" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6">Không có sản phẩm nào.</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </main>

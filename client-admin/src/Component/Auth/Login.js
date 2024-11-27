@@ -20,16 +20,19 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (!emailOrUsername || !password) {
-        setError("Vui lòng nhập email/username và mật khẩu!");
-        return;
-      }
-      const payload = { emailOrUsername, password }; // Adjust payload
+      const payload = { emailOrUsername, password };
       console.log("Payload being sent for login:", payload);
+
       const response = await API.post("/auth/login", payload);
-      console.log("Đăng nhập thành công:", response.data);
-      alert("Đăng nhập thành công!");
-      navigate("/admin/home");
+
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token); // Lưu token
+        console.log("Token saved:", response.data.token);
+        alert("Đăng nhập thành công!");
+        navigate("/admin/home");
+      } else {
+        throw new Error("No token returned from server");
+      }
     } catch (error) {
       setError(error.response?.data?.message || "Đã xảy ra lỗi khi đăng nhập!");
     }
