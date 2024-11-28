@@ -25,13 +25,23 @@ function Login() {
 
       const response = await API.post("/auth/login", payload);
 
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token); // Lưu token
-        console.log("Token saved:", response.data.token);
-        alert("Đăng nhập thành công!");
-        navigate("/admin/home");
+      if (response.data.token && response.data.user) {
+        const { token, user } = response.data;
+
+        // Save token to localStorage
+        localStorage.setItem("token", token);
+        console.log("Token saved:", token);
+
+        // Check if the user has admin role
+        if (user.role === "admin") {
+          alert("Đăng nhập thành công!");
+          navigate("/admin/home"); // Redirect to admin home
+        } else {
+          alert("Bạn không có quyền truy cập vào khu vực admin!");
+          navigate("/"); // Redirect to a non-admin area (e.g., home page)
+        }
       } else {
-        throw new Error("No token returned from server");
+        throw new Error("Invalid login response from server.");
       }
     } catch (error) {
       setError(error.response?.data?.message || "Đã xảy ra lỗi khi đăng nhập!");

@@ -97,33 +97,83 @@ exports.verify = async (req, res) => {
   }
 };
 
+// exports.login = async (req, res) => {
+//   const { emailOrUsername, password } = req.body;
+//   try {
+//     const user = await User.findOne({
+//       $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
+//     });
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+//     if (!user.isActive) {
+//       return res.status(403).json({
+//         message: "Account not verified. Please verify your account first.",
+//       });
+//     }
+//     const isPasswordValid = await bcrypt.compare(password, user.password);
+//     if (!isPasswordValid) {
+//       return res.status(401).json({ message: "Invalid password" });
+//     }
+//     user.lastLogin = new Date();
+//     await user.save();
+//     const token = jwt.sign(
+//       { id: user._id, role: user.role },
+//       process.env.JWT_SECRET,
+//       { expiresIn: "1d" }
+//     );
+
+//     res.status(200).json({ message: "Login successful", token });
+//   } catch (error) {
+//     console.error("Error during login:", error.message);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
 exports.login = async (req, res) => {
   const { emailOrUsername, password } = req.body;
   try {
     const user = await User.findOne({
       $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
     });
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
     if (!user.isActive) {
       return res.status(403).json({
         message: "Account not verified. Please verify your account first.",
       });
     }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
+
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid password" });
     }
+
+    // Update last login time
     user.lastLogin = new Date();
     await user.save();
+
+    // Generate JWT token
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    res.status(200).json({ message: "Login successful", token });
+    // Return token and user details
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (error) {
     console.error("Error during login:", error.message);
     res.status(500).json({ message: "Internal server error" });
