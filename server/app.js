@@ -8,7 +8,7 @@ const { authenticate } = require("./middleware/authMiddleware");
 const limiter = require("./middleware/rateLimiter");
 const cartRoutes = require("./routes/cartRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
-const productRoutes = require("./routes/productRoutes");
+const searchRoutes = require("./routes/searchRoutes");
 
 const app = express();
 app.use(express.json());
@@ -22,6 +22,6 @@ app.use("/api/admin", authenticate, adminRoutes);
 app.use("/api/user", authenticate, userRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/wishlist", wishlistRoutes);
-app.use("/api/products", productRoutes);
+app.use("/api/search", searchRoutes);
 
 module.exports = app;
