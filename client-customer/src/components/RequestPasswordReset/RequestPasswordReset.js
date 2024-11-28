@@ -1,42 +1,53 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../../api/api";
+
 
 const RequestPasswordReset = () => {
   const [emailOrUsername, setEmailOrUsername] = useState("");
-  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await API.post("/auth/request-password-reset", {
-        emailOrUsername,
-      });
-      setMessage(response.data.message || "Request sent successfully.");
+      const payload = { emailOrUsername };
+      console.log("Payload being sent for password reset:", payload);
+
+      await API.post("/auth/request-password-reset", payload); // Endpoint cho user
+      setMessage("Instructions to reset your password have been sent to your email.");
       setError("");
-    } catch (err) {
-      setError(err.response?.data?.error || "An error occurred.");
-      setMessage("");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to send password reset instructions!");
     }
   };
 
   return (
-    <div>
-      <h1>Request Password Reset</h1>
+    <div className="request-password-reset-container">
+      <h2>Forgot Your Password?</h2>
+      {error && <p className="error-message">{error}</p>}
+      {message && <p className="success-message">{message}</p>}
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email or Username:</label>
+        <div className="input-group">
           <input
             type="text"
+            id="emailOrUsername"
             value={emailOrUsername}
             onChange={(e) => setEmailOrUsername(e.target.value)}
+            placeholder=" "
             required
           />
+          <label htmlFor="emailOrUsername">Email or Username*</label>
         </div>
-        <button type="submit">Send Request</button>
+        <button type="submit" className="reset-button">
+          Request Password Reset
+        </button>
       </form>
-      {message && <p style={{ color: "green" }}>{message}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 };

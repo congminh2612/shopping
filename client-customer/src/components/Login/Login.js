@@ -7,12 +7,11 @@ import API from "../../api/api";
 import "./Login.css";
 
 function Login() {
-  const [emailOrUsername, setEmailOrUsername] = useState(""); // Support for email or username
+  const [emailOrUsername, setEmailOrUsername] = useState(""); 
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [forgotEmailOrUsername, setForgotEmailOrUsername] = useState("");
-  const [isForgotPasswordModalOpen, setForgotPasswordModalOpen] =
-    useState(false);
+  const [isForgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,10 +25,10 @@ function Login() {
       const response = await API.post("/auth/login", payload);
 
       if (response.data.token) {
-        localStorage.setItem("token", response.data.token); // Lưu token
+        localStorage.setItem("token", response.data.token);
         console.log("Token saved:", response.data.token);
         alert("Đăng nhập thành công!");
-        navigate("/user/home");
+        navigate("/"); // Điều hướng về trang chủ cho người dùng
       } else {
         throw new Error("No token returned from server");
       }
@@ -53,9 +52,7 @@ function Login() {
     e.preventDefault();
     try {
       if (!forgotEmailOrUsername) {
-        setError(
-          "Vui lòng nhập email/username để nhận hướng dẫn đặt lại mật khẩu!"
-        );
+        setError("Vui lòng nhập email/username để nhận hướng dẫn đặt lại mật khẩu!");
         return;
       }
       const payload = { emailOrUsername: forgotEmailOrUsername };
@@ -71,27 +68,19 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-header">
-        <h2
-          className={location.pathname === "/user/login" ? "active-link" : ""}
-          onClick={() => navigate("/user/login")}
-        >
+        <h2 className={location.pathname === "/login" ? "active-link" : ""} onClick={() => navigate("/login")}>
           Already Registered?
         </h2>
-        <h2
-          className={
-            location.pathname === "/user/register" ? "active-link" : ""
-          }
-          onClick={() => navigate("/user/register")}
-        >
+        <h2 className={location.pathname === "/register" ? "active-link" : ""} onClick={() => navigate("/register")}>
           Create Your Account
         </h2>
       </div>
       <div className="login-box">
-        <p>If you are already registered with Nhom3, login here:</p>
+        <p>If you are already registered, login here:</p>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <input
-              type="text" // Use type="text" to support both email and username
+              type="text"
               id="emailOrUsername"
               value={emailOrUsername}
               onChange={(e) => setEmailOrUsername(e.target.value)}
@@ -118,11 +107,7 @@ function Login() {
           </div>
 
           {error && <p className="error-message">{error}</p>}
-          <button
-            type="button"
-            className="forgot-password"
-            onClick={openForgotPasswordModal}
-          >
+          <button type="button" className="forgot-password" onClick={openForgotPasswordModal}>
             Forgot your password?
           </button>
           <button type="submit" className="login-button">
@@ -149,9 +134,7 @@ function Login() {
                   placeholder=" "
                   required
                 />
-                <label htmlFor="forgot-emailOrUsername">
-                  Email or Username*
-                </label>
+                <label htmlFor="forgot-emailOrUsername">Email or Username*</label>
               </div>
               {error && <p className="error-message">{error}</p>}
               <button type="submit" className="submit-button">

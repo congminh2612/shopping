@@ -14,9 +14,9 @@ const Register = () => {
     name: "",
     username: "",
     email: "",
-    birthday: "", // Ensure the initial value is empty
+    birthday: "",
     password: "",
-    role: "user",
+    role: "user", // Đổi role thành user
   });
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -89,7 +89,7 @@ const Register = () => {
       );
 
       setTimeout(() => {
-        window.location.href = "/verify";
+        navigate("/verify"); // Điều hướng đến trang verify của user
       }, 2000);
     } catch (err) {
       setError(

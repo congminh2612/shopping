@@ -4,86 +4,67 @@ import API from "../../api/api";
 import "./ResetPassword.css";
 
 const ResetPassword = () => {
-  const { token } = useParams();
+  const { token } = useParams(); // Lấy token từ URL
   const navigate = useNavigate();
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (newPassword !== confirmNewPassword) {
-      setError("Passwords do not match");
+    if (password !== confirmPassword) {
+      setError("Passwords do not match!");
       return;
     }
+
     try {
-      await API.post(
-        "/auth/reset-password",
-        { newPassword },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setSuccess("Password reset successful!");
+      const payload = { token, newPassword: password };
+      console.log("Payload being sent for password reset:", payload);
+
+      await API.post("/auth/reset-password", payload); // Endpoint cho user
+      setMessage("Password reset successful! Please log in.");
       setError("");
-      setTimeout(() => navigate("/user/login"), 2000);
-    } catch (err) {
-      setError(err.response?.data?.message || "Error resetting password");
-      setSuccess("");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to reset password!");
     }
   };
 
   return (
     <div className="reset-password-container">
-      <h2>Reset Password</h2>
-      <div className="password-requirements">
-        <ul>
-          <li>No repetition of more than two characters</li>
-          <li>One number</li>
-          <li>
-            At least 1 special character from `!@#$%^&*-_/+=`
-          </li>
-          <li>One lowercase character</li>
-          <li>One uppercase character</li>
-          <li>8 characters minimum</li>
-        </ul>
-      </div>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
+      <h2>Reset Your Password</h2>
+      {error && <p className="error-message">{error}</p>}
+      {message && <p className="success-message">{message}</p>}
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="input-group">
           <input
             type="password"
-            placeholder="New Password*"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder=" "
             required
           />
+          <label htmlFor="password">New Password*</label>
         </div>
-        <div>
+        <div className="input-group">
           <input
             type="password"
-            placeholder="Confirm New Password*"
-            value={confirmNewPassword}
-            onChange={(e) => setConfirmNewPassword(e.target.value)}
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder=" "
             required
           />
+          <label htmlFor="confirmPassword">Confirm Password*</label>
         </div>
-        <div className="form-actions">
-          <button
-            type="button"
-            className="cancel-button"
-            onClick={() => navigate("/admin/login")}
-          >
-            Cancel
-          </button>
-          <button type="submit" className="save-button">
-            Save
-          </button>
-        </div>
+        <button type="submit" className="reset-button">
+          Reset Password
+        </button>
       </form>
     </div>
   );
