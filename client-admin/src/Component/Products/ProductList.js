@@ -82,7 +82,7 @@ function ProductList() {
 
   // Open form to add a new product
   const handleAddProduct = () => {
-    setSelectedProduct(null);
+    setSelectedProduct({}); // Đảm bảo không truyền null
     setIsFormOpen(true);
   };
 
@@ -190,7 +190,7 @@ function ProductList() {
                   <td>{product.name}</td>
                   <td>{product.price}₫</td>
                   <td>{product.stock}</td>
-                  <td>{getCategoryName(product)}</td> {/* Sửa ở đây */}
+                  <td>{getCategoryName(product)}</td>
                   <td>
                     <button
                       className="action-icon"
@@ -218,7 +218,7 @@ function ProductList() {
 
       {isFormOpen && (
         <ProductForm
-          product={selectedProduct}
+          product={selectedProduct || {}} // Truyền sản phẩm hoặc đối tượng rỗng
           onSave={handleSaveProduct}
           onCancel={handleCancel}
         />

@@ -39,6 +39,12 @@ const productSchema = new mongoose.Schema({
       type: String,
     },
   ],
+  attributes: [
+    {
+      key: { type: String, required: true }, // Tên thuộc tính
+      value: { type: String, required: true }, // Giá trị thuộc tính
+    },
+  ],
 });
 
 productSchema.pre("save", function (next) {
