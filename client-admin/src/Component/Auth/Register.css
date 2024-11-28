@@ -1,185 +1,185 @@
 /* Container Styles */
 .register-form .register-container {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    padding: 40px 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 40px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
 }
 
 /* Navigation Bar */
 .register-form .register-navigation {
-    display: flex;
-    justify-content: center;
-    gap: 50px;
-    margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-bottom: 40px;
 }
 
 .register-form .register-navigation .nav-link {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    cursor: pointer;
-    text-decoration: none;
-    transition: color 0.3s ease;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .register-form .register-navigation .nav-link.active {
-    text-decoration: underline;
-    color: black;
+  text-decoration: underline;
+  color: black;
 }
 
 .register-form .register-navigation .nav-link:hover {
-    color: black;
+  color: black;
 }
 
 /* Form Styles */
 .register-form form {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 /* Input Group */
 .register-form .input-group {
-    position: relative;
-    margin-bottom: 30px;
+  position: relative;
+  margin-bottom: 30px;
 }
 
 .register-form .input-group input {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    padding: 10px 5px;
-    font-size: 16px;
-    background: none;
-    outline: none;
-    transition: border-color 0.3s ease;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 5px;
+  font-size: 16px;
+  background: none;
+  outline: none;
+  transition: border-color 0.3s ease;
 }
 
 .register-form .input-group input:focus {
-    border-bottom: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
 .register-form .input-group label {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: #777;
-    transition: all 0.3s ease;
-    pointer-events: none;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #777;
+  transition: all 0.3s ease;
+  pointer-events: none;
 }
 
 .register-form .input-group input:focus + label,
 .register-form .input-group input:not(:placeholder-shown) + label {
-    top: -15px;
-    font-size: 12px;
-    color: black;
+  top: -15px;
+  font-size: 12px;
+  color: black;
 }
 
 /* Address, City, Country (Short Input Fields) */
 .register-form .short-input-group {
-    position: relative;
-    margin-bottom: 30px;
+  position: relative;
+  margin-bottom: 30px;
 }
 
 .register-form .short-input-group input {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    padding: 10px 5px;
-    font-size: 16px;
-    background: none;
-    outline: none;
-    transition: border-color 0.3s ease;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 5px;
+  font-size: 16px;
+  background: none;
+  outline: none;
+  transition: border-color 0.3s ease;
 }
 
 .register-form .short-input-group input:focus {
-    border-bottom: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
 .register-form .short-input-group label {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: #777;
-    transition: all 0.3s ease;
-    pointer-events: none;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #777;
+  transition: all 0.3s ease;
+  pointer-events: none;
 }
 
 .register-form .short-input-group input:focus + label,
 .register-form .short-input-group input:not(:placeholder-shown) + label {
-    top: -15px;
-    font-size: 12px;
-    color: black;
+  top: -15px;
+  font-size: 12px;
+  color: black;
 }
 
 /* Gender Group */
 .register-form .gender-group {
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 .register-form .gender-group .form-label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 16px;
-    font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .register-form .gender-options {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    justify-content: start;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: start;
 }
 
 .register-form .gender-options label {
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 /* Success and Error Messages */
 .register-form .success-message,
 .register-form .error-message {
-    text-align: center;
-    font-size: 14px;
-    padding: 10px;
-    border-radius: 5px;
+  text-align: center;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .register-form .success-message {
-    background-color: #d4edda;
-    color: #155724;
+  background-color: #d4edda;
+  color: #155724;
 }
 
 .register-form .error-message {
-    background-color: #f8d7da;
-    color: #721c24;
+  background-color: #f8d7da;
+  color: #721c24;
 }
 
 /* Button */
 .register-form button {
-    padding: 10px 20px;
-    background-color: black;
-    color: #ffffff;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  padding: 10px 20px;
+  background-color: black;
+  color: #ffffff;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .register-form button:hover {
-    background-color: black;
+  background-color: black;
 }
 
 /* General Adjustments */
@@ -187,62 +187,62 @@
 .register-form .register-container input[type="email"],
 .register-form .register-container input[type="password"],
 .register-form .register-container input[type="date"] {
-    border: none;
-    border-bottom: 1px solid #ccc;
-    padding: 10px 5px;
-    font-size: 16px;
-    outline: none;
-    background: none;
-    transition: border-color 0.3s ease;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 5px;
+  font-size: 16px;
+  outline: none;
+  background: none;
+  transition: border-color 0.3s ease;
 }
 
 .register-form .register-container input:focus {
-    border-bottom: 1px solid #007bff;
+  border-bottom: 1px solid #007bff;
 }
 
 .register-form .password-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 1.2em;
-    color: #777;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.2em;
+  color: #777;
 }
 
 .register-form .input-group {
-    position: relative;
+  position: relative;
 }
 .register-form .password-requirements {
-    margin-top: 15px;
-    padding: 10px;
+  margin-top: 15px;
+  padding: 10px;
 }
 
 .register-form .requirements-title {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    display: block;
-    color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+  color: #333;
 }
 
 .register-form .password-requirements ul {
-    list-style: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
 }
 
 .register-form .password-requirements li {
-    margin-bottom: 5px;
-    font-size: 14px;
+  margin-bottom: 5px;
+  font-size: 14px;
 }
 
 .register-form .password-requirements .valid {
-    color: green;
+  color: green;
 }
 
 .register-form .password-requirements .invalid {
-    color: red;
+  color: red;
 }
-.register-form  .requirement-icon {
-    margin-right: 8px;
+.register-form .requirement-icon {
+  margin-right: 8px;
 }
