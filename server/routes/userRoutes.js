@@ -8,7 +8,7 @@ const {
   updateUserProfile,
 } = require("../controllers/userController");
 
-const checkRole = require("../middleware/checkRole");
+const { checkRole } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 

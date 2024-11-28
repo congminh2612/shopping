@@ -21,7 +21,7 @@ const {
   getAnalytics,
 } = require("../controllers/adminController");
 
-const checkRole = require("../middleware/checkRole");
+const { checkRole } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 

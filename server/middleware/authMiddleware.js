@@ -1,35 +1,34 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
-// exports.authenticate = (req, res, next) => {
-//   const authHeader = req.headers.authorization;
-//   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-//     return res
-//       .status(401)
-//       .json({ message: "Unauthorized. No token provided." });
-//   }
-//   const token = authHeader.split(" ")[1];
-//   try {
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//     req.user = decoded;
-//     next();
-//   } catch (error) {
-//     return res.status(403).json({ message: "Access denied. Invalid token." });
-//   }
-// };
-
-exports.authenticate = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Unauthorized, no token provided" });
+exports.authenticate = async (req, res, next) => {
+  const token = req.header("Authorization")?.replace("Bearer ", "");
+  if (!token) {
+    return res.status(401).json({ message: "Authentication failed" });
   }
 
-  const token = authHeader.split(" ")[1];
   try {
+    // Giải mã token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Gắn user vào request
+
+    // Tìm thông tin người dùng
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Gán thông tin người dùng vào req.user
+    req.user = user;
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized, invalid token" });
+    console.error("Authentication error:", error);
+    res.status(401).json({ message: "Invalid token" });
   }
+};
+
+exports.checkRole = (role) => (req, res, next) => {
+  if (req.user && req.user.role === role) {
+    return next();
+  }
+  return res.status(403).json({ message: "Access denied" });
 };

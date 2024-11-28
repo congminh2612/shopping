@@ -9,6 +9,7 @@ const limiter = require("./middleware/rateLimiter");
 const cartRoutes = require("./routes/cartRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const searchRoutes = require("./routes/searchRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 app.use(express.json());
@@ -23,5 +24,6 @@ app.use("/api/user", authenticate, userRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/search", searchRoutes);
+app.use("/api/orders", orderRoutes);
 
 module.exports = app;
