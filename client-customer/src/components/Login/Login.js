@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faEyeSlash as faEyeSlashRegular } from "@fortawesome/free-regular-svg-icons";
 import API from "../../api/api";
 import "./Login.css";
+import { AuthContext } from "../../contexts/AuthContext"; // Import AuthContext
 
 function Login() {
   const [emailOrUsername, setEmailOrUsername] = useState(""); 
@@ -15,27 +16,36 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useContext(AuthContext); // Sử dụng AuthContext để lấy hàm login
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const payload = { emailOrUsername, password };
       console.log("Payload being sent for login:", payload);
-
+  
       const response = await API.post("/auth/login", payload);
-
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
-        console.log("Token saved:", response.data.token);
+  
+      if (response.status === 200 && response.data && response.data.token) {
+        // Lưu token vào localStorage và gọi hàm login từ AuthContext
+        login(response.data.token); 
         alert("Đăng nhập thành công!");
-        navigate("/"); // Điều hướng về trang chủ cho người dùng
+        
+        // Điều hướng về trang chủ
+        navigate("/");
+  
+        // Reload lại trang để đảm bảo trạng thái của Header được cập nhật ngay lập tức
+        setTimeout(() => {
+          window.location.reload();
+        }, 100); // Delay ngắn để đảm bảo chuyển hướng trước khi reload
       } else {
-        throw new Error("No token returned from server");
+        throw new Error("Không có token được trả về từ server");
       }
     } catch (error) {
-      setError(error.response?.data?.message || "Đã xảy ra lỗi khi đăng nhập!");
+      console.error("Login error:", error);
+      setError(error.response?.data?.message || "Đã xảy ra lỗi khi đăng nhập! Xin vui lòng thử lại.");
     }
-  };
+  };   
 
   const openForgotPasswordModal = () => {
     setForgotPasswordModalOpen(true);
@@ -61,6 +71,7 @@ function Login() {
       alert("Hướng dẫn đặt lại mật khẩu đã được gửi đến email của bạn.");
       closeForgotPasswordModal();
     } catch (error) {
+      console.error("Forgot password error:", error);
       setError(error.response?.data?.message || "Đã xảy ra lỗi!");
     }
   };

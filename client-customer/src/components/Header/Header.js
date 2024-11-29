@@ -1,21 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSearch, faShoppingCart, faUser, faHeart, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext"; // Import AuthContext
 
 function Header() {
+  const { isLoggedIn, login, logout } = useContext(AuthContext); // Lấy trạng thái và hàm từ context
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Kiểm tra xem có dữ liệu người dùng trong localStorage hay không
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    if (userData) {
-      setUser(userData);
-    }
-  }, []);
 
   // Hàm để thay đổi trạng thái mở/đóng của menu
   const toggleMenu = () => {
@@ -27,22 +20,43 @@ function Header() {
     setIsMenuOpen(false);
   };
 
-  // Hàm để đăng xuất người dùng
-  const handleLogout = () => {
-    // Xóa thông tin người dùng khỏi localStorage và cập nhật trạng thái
-    localStorage.removeItem("userData");
-    setUser(null);
-    navigate("/");
-  };
-
   // Hàm để điều hướng tới trang profile hoặc login tùy thuộc vào trạng thái người dùng
   const handleUserIconClick = () => {
-    if (user) {
+    if (isLoggedIn) {
       navigate("/profile");
     } else {
       navigate("/login");
     }
   };
+
+  // Hàm để đăng xuất người dùng
+  const handleLogout = () => {
+    logout(); // Gọi hàm logout từ context để cập nhật trạng thái
+    navigate("/login");
+  };
+
+  // useEffect để lắng nghe sự thay đổi của token trong localStorage
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        login(token);
+      } else {
+        logout();
+      }
+    };
+
+    // Đăng ký lắng nghe sự kiện thay đổi localStorage
+    window.addEventListener("storage", handleStorageChange);
+
+    // Kiểm tra trạng thái khi component được mount
+    handleStorageChange();
+
+    // Cleanup event listener khi component bị unmount
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [login, logout]);
 
   return (
     <>
@@ -68,18 +82,18 @@ function Header() {
           <Link to="/cart" className="header-icon">
             <FontAwesomeIcon icon={faShoppingCart} />
           </Link>
-          
-          {/* Biểu tượng User - Điều hướng đến Profile hoặc Login */}
-          <div className="header-icon" onClick={handleUserIconClick}>
-            <FontAwesomeIcon icon={faUser} />
-          </div>
 
-          {/* Biểu tượng Logout - Chỉ hiển thị khi người dùng đã đăng nhập */}
-          {user && (
-            <div className="header-icon" onClick={handleLogout}>
-              <FontAwesomeIcon icon={faSignOutAlt} />
-            </div>
-          )}
+          {/* Biểu tượng User hoặc Logout - tùy thuộc vào trạng thái đăng nhập */}
+          <div
+            className="header-icon"
+            onClick={isLoggedIn ? handleLogout : handleUserIconClick}
+            title={isLoggedIn ? "Logout" : "Login/Register"}
+          >
+            <FontAwesomeIcon
+              icon={isLoggedIn ? faSignOutAlt : faUser}
+              style={{ cursor: "pointer" }}
+            />
+          </div>
         </div>
       </header>
 

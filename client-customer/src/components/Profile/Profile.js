@@ -6,10 +6,10 @@ const Profile = ({ user, setUser }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear local storage or any user session data
+    // Xóa thông tin người dùng khỏi localStorage
     localStorage.removeItem("userData");
     setUser(null);
-    // Redirect to the homepage after logout
+    // Điều hướng đến trang chủ
     navigate("/");
   };
 

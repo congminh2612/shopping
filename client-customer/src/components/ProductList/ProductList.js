@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
 import API from "../../api/api"; // Đảm bảo đường dẫn tới file API
 
-const ProductList = ({ category }) => {
+const ProductList = ({ category = "all" }) => {
   const [products, setProducts] = useState([]); // State để lưu danh sách sản phẩm
   const [loading, setLoading] = useState(true); // State để theo dõi trạng thái loading
   const [error, setError] = useState(null); // State để theo dõi lỗi
 
   useEffect(() => {
+    // Kiểm tra giá trị của category
+    console.log("Category:", category);
+
+    if (!category) {
+      setError("Category không xác định.");
+      setLoading(false);
+      return;
+    }
+
     // Fetch products từ API
     const fetchProducts = async () => {
       try {

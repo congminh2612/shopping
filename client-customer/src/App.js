@@ -1,87 +1,82 @@
-import React, { useState, useEffect } from "react";
+// src/App.js
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
-import HomePage from "./components/Homepage/Homepage"; // Trang chủ
+import HomePage from "./components/Homepage/Homepage";
 import ProductList from "./components/ProductList/ProductList";
 import CartPage from "./components/Cart/Cart";
 import SearchPage from "./components/Search/Search";
-import LoginPage from "./components/Login/Login"; // Đăng nhập
-import Register from "./components/Register/Register"; // Đăng ký
+import LoginPage from "./components/Login/Login";
+import Register from "./components/Register/Register";
 import ProductDetail from "./components/ProductDetail/ProductDetail";
 import WishlistPage from "./components/Wishlist/Wishlist";
 import RequestPasswordReset from "./components/RequestPasswordReset/RequestPasswordReset";
 import ResetPassword from "./components/ResetPassword/ResetPassword";
 import Verify from "./components/Verify/Verify";
-import Profile from "./components/Profile/Profile"; // Thêm trang Profile
+import Profile from "./components/Profile/Profile";
+import { AuthProvider } from "./contexts/AuthContext"; // Import AuthProvider để bao bọc toàn bộ ứng dụng
 import "./App.css";
 
 function App() {
-  // Trạng thái người dùng
-  const [user, setUser] = useState(null);
-
-  // Lấy thông tin người dùng từ localStorage
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    if (userData) {
-      setUser(userData);
-    }
-  }, []);
-
   return (
-    <Router>
-      <div className="app-container">
-        {/* Header */}
-        <Header user={user} />
+    <AuthProvider> {/* Bọc ứng dụng bằng AuthProvider để sử dụng thông tin xác thực người dùng */}
+      <Router>
+        <div className="app-container">
+          {/* Header */}
+          <Header />
 
-        {/* Nội dung chính */}
-        <main className="main-content">
-          <Routes>
-            {/* Trang chủ */}
-            <Route path="/" element={<HomePage />} />
+          {/* Nội dung chính của ứng dụng */}
+          <main className="main-content">
+            <Routes>
+              {/* Trang chủ */}
+              <Route path="/" element={<HomePage />} />
 
-            {/* Các danh mục sản phẩm */}
-            <Route path="/products/all" element={<ProductList category="all" />} />
-            <Route path="/products/men" element={<ProductList category="men" />} />
-            <Route path="/products/women" element={<ProductList category="women" />} />
-            <Route path="/products/outwear" element={<ProductList category="outwear" />} />
-            <Route path="/products/accessories" element={<ProductList category="accessories" />} />
+              {/* Trang sản phẩm theo danh mục */}
+              <Route path="/products/all" element={<ProductList category="all" />} />
+              <Route path="/products/men" element={<ProductList category="men" />} />
+              <Route path="/products/women" element={<ProductList category="women" />} />
+              <Route path="/products/outwear" element={<ProductList category="outwear" />} />
+              <Route path="/products/accessories" element={<ProductList category="accessories" />} />
 
-            {/* Chi tiết sản phẩm */}
-            <Route path="/product/:id" element={<ProductDetail />} />
+              {/* Chi tiết sản phẩm */}
+              <Route path="/product/:id" element={<ProductDetail />} />
 
-            {/* Trang giỏ hàng */}
-            <Route path="/cart" element={<CartPage />} />
+              {/* Trang giỏ hàng */}
+              <Route path="/cart" element={<CartPage />} />
 
-            {/* Wishlist */}
-            <Route path="/wishlist" element={<WishlistPage />} />
+              {/* Danh sách yêu thích */}
+              <Route path="/wishlist" element={<WishlistPage />} />
 
-            {/* Tìm kiếm */}
-            <Route path="/search" element={<SearchPage />} />
+              {/* Tìm kiếm */}
+              <Route path="/search" element={<SearchPage />} />
 
-            {/* Đăng nhập và Đăng ký */}
-            <Route path="/login" element={<LoginPage setUser={setUser} />} />
-            <Route path="/register" element={<Register />} />
+              {/* Đăng nhập */}
+              <Route path="/login" element={<LoginPage />} />
 
-            {/* Khôi phục mật khẩu */}
-            <Route path="/request-password-reset" element={<RequestPasswordReset />} />
-            <Route path="/reset-password/:token" element={<ResetPassword />} />
+              {/* Đăng ký */}
+              <Route path="/register" element={<Register />} />
 
-            {/* Xác minh tài khoản */}
-            <Route path="/verify" element={<Verify />} />
+              {/* Khôi phục mật khẩu */}
+              <Route path="/request-password-reset" element={<RequestPasswordReset />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-            {/* Trang Profile */}
-            <Route path="/profile" element={<Profile user={user} setUser={setUser} />} />
+              {/* Xác minh tài khoản */}
+              <Route path="/verify" element={<Verify />} />
 
-            {/* Redirect không tìm thấy */}
-            <Route path="*" element={<HomePage />} />
-          </Routes>
-        </main>
+              {/* Trang cá nhân */}
+              <Route path="/profile" element={<Profile />} />
 
-        {/* Footer */}
-        <Footer />
-      </div>
-    </Router>
+              {/* Trang không tìm thấy - điều hướng về trang chủ */}
+              <Route path="*" element={<HomePage />} />
+            </Routes>
+          </main>
+
+          {/* Footer */}
+          <Footer />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

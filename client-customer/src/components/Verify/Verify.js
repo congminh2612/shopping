@@ -24,16 +24,14 @@ const Verify = () => {
       console.log("Payload being sent for verification:", payload);
 
       const response = await API.post("/auth/verify", payload); // Endpoint cho user
-      setMessage(response.data.message || "Verification successful! Please log in.");
+      setMessage(response.data.message || "Verification successful! Redirecting to login...");
       setError("");
 
       // Xóa email/username khỏi localStorage sau khi xác minh
       localStorage.removeItem("emailOrUsername");
 
-      // Chuyển hướng đến trang đăng nhập sau 2 giây
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      // Chuyển hướng đến trang đăng nhập ngay sau khi xác minh thành công
+      navigate("/login");
     } catch (error) {
       setError(error.response?.data?.message || "Verification failed. Please try again.");
       setMessage("");
@@ -58,6 +56,7 @@ const Verify = () => {
         placeholder="Enter Verification Code"
         value={verificationCode}
         onChange={handleCodeChange}
+        required
       />
       <button onClick={handleVerify}>Verify</button>
     </div>
