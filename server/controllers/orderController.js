@@ -194,10 +194,15 @@ exports.getOrders = async (req, res) => {
  */
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().populate("items.productId userId");
+    // Lọc và chỉ lấy các đơn hàng hợp lệ
+    const orders = await Order.find({
+      userId: { $ne: null }, // userId không phải null
+      "items.productId": { $ne: null }, // productId trong items không null
+    }).populate("items.productId userId"); // Điền thông tin từ các collection liên quan
+
     res.status(200).json({ orders });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching orders:", error);
     res.status(500).json({ message: "Failed to fetch orders", error });
   }
 };
