@@ -1,8 +1,10 @@
+/* Container Styles */
 .users-container {
   font-family: Arial, sans-serif;
   padding: 20px;
 }
 
+/* Header Styles */
 .home-header {
   display: flex;
   justify-content: space-between;
@@ -12,47 +14,127 @@
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.users-content h1 {
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.menu-container {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 200px;
+  background: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+.menu-container.open {
+  display: block;
+}
+
+.menu-list {
+  list-style: none;
+  padding: 10px 0;
+}
+
+.menu-list li {
+  padding: 10px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+}
+
+.menu-list li:hover {
+  background-color: #f4f4f4;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+}
+
+.user-icon img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 30px;
+  background: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.user-dropdown .dropdown-button {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.user-dropdown .dropdown-button:hover {
+  background-color: #f4f4f4;
+}
+
+/* Table Styles */
+.users-container .users-content h1 {
   margin-bottom: 20px;
 }
 
-.users-table {
+.users-container .users-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.users-table th,
-.users-table td {
+.users-container .users-table th,
+.users-container .users-table td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: center;
 }
 
-.users-table th {
+.users-container .users-table th {
   background-color: #f4f4f4;
   font-weight: bold;
 }
 
-.users-table td {
+.users-container .users-table td {
   background-color: #fff;
 }
 
-.action-icon {
+/* Action Button Styles */
+.users-container .action-icon {
   background: white;
   color: black;
   border: none;
   cursor: pointer;
   font-size: 16px;
+  padding: 5px;
 }
 
-.action-icon:hover {
+.users-container .action-icon:hover {
   color: #fff;
   background: black;
+  border-radius: 4px;
 }
 
-.confirm-overlay {
+/* Modal Styles */
+.users-container .confirm-overlay,
+.users-container .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -65,26 +147,31 @@
   z-index: 1000;
 }
 
-.confirm-box {
+.users-container .confirm-box,
+.users-container .modal-box {
   background: #ffffff;
   padding: 20px 30px;
   border-radius: 10px;
   text-align: center;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  width: 400px;
 }
 
-.confirm-box h2 {
+.users-container .confirm-box h2,
+.users-container .modal-box h2 {
   font-size: 18px;
   margin-bottom: 10px;
 }
 
-.confirm-actions {
+.users-container .confirm-actions,
+.users-container .form-actions {
   display: flex;
   justify-content: space-around;
   margin-top: 20px;
 }
 
-.delete-button {
+/* Button Styles */
+.users-container .delete-button {
   background: red;
   color: white;
   padding: 10px 15px;
@@ -93,7 +180,7 @@
   cursor: pointer;
 }
 
-.cancel-button {
+.users-container .cancel-button {
   background: gray;
   color: white;
   padding: 10px 15px;
@@ -102,10 +189,49 @@
   cursor: pointer;
 }
 
-.delete-button:hover {
+.users-container .delete-button:hover {
   background: darkred;
 }
 
-.cancel-button:hover {
+.users-container .cancel-button:hover {
   background: darkgray;
+}
+
+.users-container .save-button {
+  background: black;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.users-container .save-button:hover {
+  background: darkred;
+}
+
+/* Form Group Styles */
+.users-container .form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.users-container .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.users-container .form-group input,
+.users-container .form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.users-container .form-group input:focus,
+.users-container .form-group select:focus {
+  border-color: #3498db;
+  outline: none;
 }

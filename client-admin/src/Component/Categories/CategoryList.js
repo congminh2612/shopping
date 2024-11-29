@@ -222,14 +222,27 @@ import "./Categories.css";
 import API from "../../api/api";
 
 function CategoryList() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
   const navigate = useNavigate();
 
   // Fetch categories from API
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+  
+  const handleLogout = () => {
+    console.log("Đăng xuất thành công");
+    navigate("/admin/login");
+  };
+
   useEffect(() => {
     const fetchCategories = async () => {
       setLoading(true);
@@ -295,6 +308,29 @@ function CategoryList() {
     }
   };
 
+  const confirmDeleteCategory = async () => {
+    try {
+      await API.delete(`/admin/category/${categoryToDelete._id}`);
+      setCategories((prevCategories) =>
+        prevCategories.filter((category) => category._id !== categoryToDelete._id)
+      );
+      closeDeleteModal();
+    } catch (err) {
+      console.error("Error deleting category:", err);
+      alert("Failed to delete category. Please try again.");
+    }
+  };
+
+  const openDeleteModal = (category) => {
+    setCategoryToDelete(category);
+    setIsDeleteModalOpen(true);
+  };
+  
+  const closeDeleteModal = () => {
+    setCategoryToDelete(null);
+    setIsDeleteModalOpen(false);
+  };
+  
   const openForm = (category = null) => {
     setEditingCategory(category);
     setIsFormOpen(true);
@@ -304,9 +340,60 @@ function CategoryList() {
     <div className="home-container">
       <header className="home-header">
         <div className="logo">Trang chủ admin</div>
-        <button className="menu-button" onClick={() => navigate("/admin/home")}>
-          <FontAwesomeIcon icon={faBars} /> Dashboard
-        </button>
+        <div className="left-section">
+          {!isMenuOpen && (
+            <div className="menu-button" onClick={toggleMenu}>
+              <FontAwesomeIcon icon={faBars} /> Menu
+            </div>
+          )}
+          {isMenuOpen && (
+            <div className={`menu-container ${isMenuOpen ? "open" : ""}`}>
+              <button className="close-button" onClick={toggleMenu}>
+                <FontAwesomeIcon icon={faBars} />
+              </button>
+              <ul className="menu-list">
+                <li onClick={() => navigate("/admin/home")}>Dashboard</li>
+                <li onClick={() => navigate("/admin/products")}>
+                  Quản lý sản phẩm
+                </li>
+                <li onClick={() => navigate("/admin/categories")}>
+                  Quản lý mục lục
+                </li>
+                <li onClick={() => navigate("/admin/users")}>
+                  Quản lý người dùng
+                </li>
+                <li onClick={() => navigate("/admin/orders")}>
+                  Quản lý đơn hàng
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+        <div className="user-menu">
+          <div
+            className="user-icon"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png"
+              alt="User Icon"
+              className="user-avatar"
+            />
+          </div>
+          {dropdownOpen && (
+            <div className="user-dropdown">
+              <button
+                className="dropdown-button"
+                onClick={() => navigate("/admin/users")}
+              >
+                Chỉnh sửa người dùng
+              </button>
+              <button className="dropdown-button" onClick={handleLogout}>
+                Đăng xuất
+              </button>
+            </div>
+          )}
+        </div>
       </header>
 
       <div className="categories-container">
@@ -347,7 +434,7 @@ function CategoryList() {
                     </button>
                     <button
                       className="action-icon"
-                      onClick={() => handleDeleteCategory(category._id)}
+                      onClick={() => openDeleteModal(category)}
                       title="Delete"
                     >
                       <FontAwesomeIcon icon={faTrash} />
@@ -365,6 +452,25 @@ function CategoryList() {
             onSave={editingCategory ? handleEditCategory : handleAddCategory}
             onCancel={() => setIsFormOpen(false)}
           />
+        )}
+        {isDeleteModalOpen && (
+          <div className="delete-modal-overlay">
+            <div className="delete-modal">
+              <h2>Xác nhận xóa</h2>
+              <p>
+                Bạn có chắc chắn muốn xóa danh mục{" "}
+                <strong>{categoryToDelete?.name}</strong> không?
+              </p>
+              <div className="modal-actions">
+                <button className="cancel-button" onClick={closeDeleteModal}>
+                  Hủy
+                </button>
+                <button className="delete-button" onClick={confirmDeleteCategory}>
+                  Xóa
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>

@@ -1,63 +1,300 @@
-/* Overlay nền mờ */
+/* Modal Overlay */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Nền mờ */
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
 }
 
-/* Nội dung Modal */
+/* Modal Content */
 .modal-content {
   background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  width: 600px;
-  max-width: 90%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  animation: fadeIn 0.3s ease-in-out;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 650px;
+  width: 100%;
+  max-height: 80vh; /* Giới hạn chiều cao của modal */
+  overflow-y: auto; /* Cho phép cuộn nếu nội dung quá dài */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s ease-out;
+  position: relative;
+  resize: both; /* Cho phép thay đổi kích thước modal */
+  overflow: auto; /* Cho phép cuộn cả chiều ngang lẫn chiều dọc */
 }
 
-/* Nút đóng Modal */
+/* Close button */
 .modal-close {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
+  top: 15px;
+  right: 15px;
+  background-color: transparent;
   border: none;
-  font-size: 24px;
+  font-size: 1.6rem;
+  color: #333;
   cursor: pointer;
+  transition: color 0.3s ease;
 }
 
-/* Hiệu ứng mở Modal */
+.modal-close:hover {
+  color: #ff4c4c;
+}
+
+/* Header */
+.modal-header {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #555;
+  display: block;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fafafa;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: #830404;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #830404;
+  box-shadow: 0 0 10px rgba(169, 24, 2, 0.3);
+}
+
+/* Error Messages */
+.error-text {
+  font-size: 12px;
+  color: red;
+  margin-top: 5px;
+}
+
+/* Buttons */
+.save-button,
+.cancel-button {
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.save-button {
+  background-color: #28a745;
+  color: white;
+  width: 48%;
+}
+
+.save-button:hover {
+  background-color: #218838;
+}
+
+.cancel-button {
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #ddd;
+  width: 48%;
+}
+
+.cancel-button:hover {
+  background-color: #e2e6ea;
+}
+
+/* Custom Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-20px);
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+  }
+  to {
     transform: translateY(0);
   }
 }
-/* Sửa chiều rộng của ô input */
-.form-group input,
-.form-group select {
-  width: 100%; /* Chiều rộng 100% của container cha */
-  padding: 10px;
-  border: 1px solid #ccc; /* Viền */
-  border-radius: 5px; /* Bo góc */
-  box-sizing: border-box; /* Tính toán bao gồm padding và border */
-  font-size: 16px; /* Kích thước chữ */
+
+/* Image Upload */
+.image-upload-group {
+  margin-bottom: 15px;
 }
 
-/* Đảm bảo ô input không vượt quá kích thước tối đa */
-.form-group {
-  max-width: 500px; /* Chiều rộng tối đa của group */
-  margin-bottom: 15px; /* Khoảng cách giữa các group */
+.image-upload-group input[type="file"] {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fafafa;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.image-upload-group input[type="file"]:hover {
+  background-color: #e2e6ea;
+}
+
+.image-upload-group input[type="file"]:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(191, 41, 11, 0.3);
+}
+
+/* Attributes Section */
+.attributes-section {
+  margin-bottom: 25px;
+}
+
+.attributes-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+.attribute-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.attribute-item input {
+  margin-right: 10px;
+  width: 45%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fafafa;
+  font-size: 14px;
+}
+
+.attribute-item button {
+  padding: 10px 15px;
+  font-size: 14px;
+  background-color: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.attribute-item button:hover {
+  background-color: #e63946;
+}
+
+/* Add Attribute Button */
+button[type="button"].add-attribute {
+  margin-top: 20px;
+  padding: 12px 25px;
+  background-color: #a41609;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+button[type="button"].add-attribute:hover {
+  background-color: #d52a07;
+}
+
+/* File Upload Button */
+input[type="file"] {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fafafa;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+input[type="file"]:hover {
+  background-color: #e2e6ea;
+}
+
+input[type="file"]:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(200, 29, 3, 0.3);
+}
+
+/* Add Attribute Button with FontAwesome Icon */
+.add-attribute {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 25px;
+  background-color: #ff6f61;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.add-attribute i {
+  margin-right: 8px; /* Space between icon and text */
+}
+
+.add-attribute:hover {
+  background-color: #e94e3b;
+}
+
+/* File Input button */
+input[type="file"] {
+  font-size: 14px;
+  color: #333;
+  background-color: #fafafa;
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+input[type="file"]:hover {
+  background-color: #e2e6ea;
+}
+
+input[type="file"]:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(200, 29, 3, 0.3);
 }
