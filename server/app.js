@@ -10,7 +10,6 @@ const cartRoutes = require("./routes/cartRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const orderRoutes = require("./routes/orderRoutes");
-
 const app = express();
 app.use(express.json());
 
