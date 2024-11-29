@@ -229,3 +229,26 @@ exports.updateOrderStatus = async (req, res) => {
     res.status(500).json({ message: "Failed to update order status", error });
   }
 };
+/**
+ * Delete an order (admin only)
+ */
+exports.deleteOrder = async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    // Tìm và xóa đơn hàng theo orderId
+    const deletedOrder = await Order.findByIdAndDelete(orderId);
+
+    if (!deletedOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.status(200).json({
+      message: "Order deleted successfully",
+      deletedOrder, // Thông tin đơn hàng đã xóa
+    });
+  } catch (error) {
+    console.error("Error deleting order:", error);
+    res.status(500).json({ message: "Failed to delete order", error });
+  }
+};
