@@ -1,164 +1,52 @@
-/* General Styles */
 .verify-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 100vh; /* Đảm bảo chiều cao nền ít nhất là chiều cao màn hình */
   background-color: #f9f9f9;
-  margin: 0;
-  padding: 0;
+  padding: 20px; /* Thêm khoảng cách xung quanh để tránh sát màn hình */
 }
 
-/* Container */
-.verify-wrapper .verify-container {
-  background: #ffffff;
-  padding: 40px 30px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+.verify-container {
   text-align: center;
-  width: 100%;
-  max-width: 400px;
-  box-sizing: border-box; /* Đảm bảo padding không làm thay đổi kích thước */
+  padding: 30px;
+  background: #fff;
+  border-radius: 12px; /* Bo góc nhẹ nhàng hơn */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Tăng độ đổ bóng */
+  width: 400px; /* Giữ nguyên hoặc điều chỉnh nếu cần */
+  max-width: 90%; /* Đảm bảo không bị tràn trên màn hình nhỏ */
 }
 
-/* Title */
-.verify-wrapper .verify-container h2 {
-  font-size: 26px;
-  font-weight: bold;
-  margin-bottom: 15px;
-  color: #333;
-}
-
-/* Instructions */
-.verify-wrapper .verify-container p {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 15px;
-  line-height: 1.5;
-}
-
-/* Email/Username display */
-.verify-wrapper .verify-container strong {
-  font-weight: bold;
-  color: #333;
-}
-
-/* Code Input Container */
-.verification-code-container {
+.code-inputs {
   display: flex;
-  justify-content: center;
-  gap: 10px; /* Khoảng cách giữa các ô */
-  margin-bottom: 20px;
+  justify-content: space-between;
+  gap: 10px; /* Khoảng cách giữa các ô nhập */
+  margin: 20px 0;
 }
 
-/* Individual Code Input */
-.verification-code-input {
-  width: 40px;
-  height: 40px;
-  font-size: 18px;
+.code-input {
+  width: 50px; /* Điều chỉnh kích thước để phù hợp */
+  height: 60px;
+  font-size: 1.5em;
   text-align: center;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.code-input:focus {
   outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.verification-code-input:focus {
   border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-/* Buttons */
-.verify-wrapper .verify-container button {
-  background-color: #000000;
-  color: white;
-  border: none;
-  padding: 12px 15px;
-  font-size: 14px;
-  font-weight: bold;
-  text-transform: uppercase;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
-  transition: background-color 0.3s ease;
-}
-
-.verify-wrapper .verify-container button:hover {
-  background-color: #333;
-}
-
-/* Error and success messages */
-.verify-wrapper .verify-container .error-message {
+.error-message {
   color: red;
-  font-size: 14px;
-  margin-bottom: 15px;
+  margin-top: 15px; /* Tăng khoảng cách */
+  font-size: 1.1em; /* Tăng kích thước chữ */
 }
 
-.verify-wrapper .verify-container .success-message {
+.success-message {
   color: green;
-  font-size: 14px;
-  margin-bottom: 15px;
-}
-
-/* Responsive Design */
-@media (max-width: 480px) {
-  .verify-wrapper .verify-container {
-    padding: 20px;
-  }
-
-  .verify-wrapper .verify-container h2 {
-    font-size: 22px;
-  }
-
-  .verify-wrapper .verify-container button {
-    padding: 10px 12px;
-  }
-
-  .verification-code-input {
-    width: 35px;
-    height: 35px;
-    font-size: 16px;
-  }
-}
-.verified-icon {
-  font-size: 36px;
-  color: #000; /* Màu xanh lá cây */
-  margin-top: 20px;
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-/* Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Input Styling */
-.verification-code-container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.verification-code-input {
-  width: 40px;
-  height: 40px;
-  font-size: 18px;
-  text-align: center;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.verification-code-input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  margin-top: 15px;
+  font-size: 1.1em;
 }

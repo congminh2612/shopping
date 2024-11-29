@@ -9,20 +9,7 @@ import API from "../../api/api";
 function UserList() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [users, setUsers] = useState([
-    // {
-    //   id: 1,
-    //   name: "Nguyễn Văn A",
-    //   email: "nguyenvana@example.com",
-    //   role: "Quản trị viên",
-    // },
-    // {
-    //   id: 2,
-    //   name: "Trần Thị B",
-    //   email: "tranthib@example.com",
-    //   role: "Người dùng",
-    // },
-  ]);
+  const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState({ show: false, id: null });
@@ -45,7 +32,7 @@ function UserList() {
       setLoading(true);
       try {
         const response = await API.get("/admin/users");
-        setUsers(response.data);
+        setUsers(response.data || []);
       } catch (error) {
         console.error("Lỗi khi lấy danh sách người dùng:", error);
       } finally {
@@ -58,12 +45,19 @@ function UserList() {
   // Chỉnh sửa người dùng
   const handleEditUser = async (updatedUser) => {
     try {
-      const response = await API.put(`/admin/user/${updatedUser.id}`, updatedUser);
-      setUsers((prevUsers) =>
-        prevUsers.map((user) => (user.id === updatedUser.id ? response.data : user))
+      const response = await API.put(
+        `/admin/user/${updatedUser.id}`,
+        updatedUser
       );
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === updatedUser.id ? response.data : user
+        )
+      );
+      alert("Cập nhật thành công!");
     } catch (error) {
       console.error("Lỗi khi chỉnh sửa người dùng:", error);
+      alert("Cập nhật thất bại. Vui lòng thử lại.");
     }
     setEditingUser(null);
     setIsFormOpen(false);
@@ -73,9 +67,13 @@ function UserList() {
   const handleDeleteUser = async () => {
     try {
       await API.delete(`/admin/user/${confirmDelete.id}`);
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== confirmDelete.id));
+      setUsers((prevUsers) =>
+        prevUsers.filter((user) => user.id !== confirmDelete.id)
+      );
+      alert("Xóa thành công!");
     } catch (error) {
       console.error("Lỗi khi xóa người dùng:", error);
+      alert("Xóa thất bại. Vui lòng thử lại.");
     }
     setConfirmDelete({ show: false, id: null });
   };
@@ -108,10 +106,18 @@ function UserList() {
               </button>
               <ul className="menu-list">
                 <li onClick={() => navigate("/admin/home")}>Dashboard</li>
-                <li onClick={() => navigate("/admin/products")}>Quản lý sản phẩm</li>
-                <li onClick={() => navigate("/admin/categories")}>Quản lý danh mục</li>
-                <li onClick={() => navigate("/admin/users")}>Quản lý người dùng</li>
-                <li onClick={() => navigate("/admin/orders")}>Quản lý đơn hàng</li>
+                <li onClick={() => navigate("/admin/products")}>
+                  Quản lý sản phẩm
+                </li>
+                <li onClick={() => navigate("/admin/categories")}>
+                  Quản lý danh mục
+                </li>
+                <li onClick={() => navigate("/admin/users")}>
+                  Quản lý người dùng
+                </li>
+                <li onClick={() => navigate("/admin/orders")}>
+                  Quản lý đơn hàng
+                </li>
               </ul>
             </div>
           )}
@@ -191,14 +197,29 @@ function UserList() {
       {isFormOpen && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <h2>{editingUser ? "Chỉnh sửa thông tin người dùng" : "Thêm người dùng mới"}</h2>
-            <form>
+            <h2>
+              {editingUser
+                ? "Chỉnh sửa thông tin người dùng"
+                : "Thêm người dùng mới"}
+            </h2>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleEditUser(editingUser);
+              }}
+            >
               <div className="form-group">
                 <label htmlFor="name">Tên:</label>
                 <input
                   type="text"
                   id="name"
                   value={editingUser?.name || ""}
+                  onChange={(e) =>
+                    setEditingUser((prev) => ({
+                      ...prev,
+                      name: e.target.value,
+                    }))
+                  }
                   placeholder="Nhập tên người dùng"
                   required
                 />
@@ -209,18 +230,47 @@ function UserList() {
                   type="email"
                   id="email"
                   value={editingUser?.email || ""}
+                  onChange={(e) =>
+                    setEditingUser((prev) => ({
+                      ...prev,
+                      email: e.target.value,
+                    }))
+                  }
                   placeholder="Nhập email người dùng"
                   required
                 />
               </div>
               <div className="form-group">
                 <label htmlFor="role">Vai trò:</label>
-                <select id="role" value={editingUser?.role || ""}>
+                <select
+                  id="role"
+                  value={editingUser?.role || ""}
+                  onChange={(e) =>
+                    setEditingUser((prev) => ({
+                      ...prev,
+                      role: e.target.value,
+                    }))
+                  }
+                >
                   <option value="admin">Admin</option>
                   <option value="user">User</option>
                 </select>
               </div>
-            
+              <div className="confirm-actions">
+                <button type="submit" className="save-button">
+                  Lưu
+                </button>
+                <button
+                  type="button"
+                  className="cancel-button"
+                  onClick={() => {
+                    setIsFormOpen(false);
+                    setEditingUser(null);
+                  }}
+                >
+                  Hủy
+                </button>
+              </div>
             </form>
           </div>
         </div>

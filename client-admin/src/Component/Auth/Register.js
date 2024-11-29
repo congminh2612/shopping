@@ -127,29 +127,6 @@ const Register = () => {
 
           <div className="input-group">
             <input
-              type="email"
-              name="email"
-              placeholder=" "
-              value={formData.email}
-              onChange={handleChange}
-            />
-            <label>Email Address *</label>
-          </div>
-
-          <div className="input-group">
-            <input
-              type="date"
-              name="birthday"
-              value={formData.birthday} // Controlled value from state
-              onChange={handleChange}
-              onClick={(e) => e.target.showPicker && e.target.showPicker()}
-              placeholder="YYYY-MM-DD" // Placeholder text (for unsupported browsers)
-            />
-            <label>Day of birth *</label>
-          </div>
-
-          <div className="input-group">
-            <input
               type="text"
               name="username"
               placeholder=" "
@@ -161,18 +138,24 @@ const Register = () => {
 
           <div className="input-group">
             <input
-              type={showPassword ? "text" : "password"}
-              name="password"
+              type="date"
+              name="birthday"
+              value={formData.birthday} // Controlled value from state
+              onChange={handleChange}
+              placeholder="YYYY-MM-DD" // Placeholder text (for unsupported browsers)
+            />
+            <label>Day of birth *</label>
+          </div>
+
+          <div className="input-group">
+            <input
+              type="email"
+              name="email"
               placeholder=" "
-              value={formData.password}
+              value={formData.email}
               onChange={handleChange}
             />
-            <label>Password *</label>
-            <FontAwesomeIcon
-              icon={showPassword ? faEyeSlashRegular : faEye}
-              className="password-icon"
-              onClick={() => setShowPassword((prev) => !prev)}
-            />
+            <label>Email Address *</label>
           </div>
 
           <div className="password-requirements">
@@ -230,6 +213,22 @@ const Register = () => {
                 Minimum 8 characters
               </li>
             </ul>
+          </div>
+
+          <div className="input-group">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder=" "
+              value={formData.password}
+              onChange={handleChange}
+            />
+            <label>Password *</label>
+            <FontAwesomeIcon
+              icon={showPassword ? faEyeSlashRegular : faEye}
+              className="password-icon"
+              onClick={() => setShowPassword((prev) => !prev)}
+            />
           </div>
 
           <button
