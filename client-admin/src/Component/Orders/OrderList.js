@@ -11,6 +11,7 @@ function OrderList() {
   const [confirmDelete, setConfirmDelete] = useState({ show: false, id: null });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(""); // State to hold error message
   const navigate = useNavigate();
 
   // Fetch orders from API
@@ -19,7 +20,7 @@ function OrderList() {
       setLoading(true);
       try {
         const response = await API.get("/orders/all");
-        console.log("API Response:", response.data); // In log toàn bộ response
+        console.log("API Response:", response.data);
         if (Array.isArray(response.data)) {
           setOrders(response.data);
         } else if (
@@ -53,28 +54,33 @@ function OrderList() {
   // Edit existing order
   const handleEditOrder = async (updatedOrder) => {
     try {
+      // Gửi PUT request để cập nhật đơn hàng
       const response = await API.put(
-        `/orders/${updatedOrder.id}`,
+        `/orders/${updatedOrder._id}`,
         updatedOrder
-      ); // PUT API
+      );
+      // Cập nhật lại đơn hàng trong state sau khi sửa thành công
       setOrders(
         orders.map((order) =>
-          order.id === updatedOrder.id ? response.data : order
+          order._id === updatedOrder._id ? response.data : order
         )
       );
+      setEditingOrder(null); // Đóng form chỉnh sửa
+      setErrorMessage(""); // Xóa thông báo lỗi nếu có
     } catch (error) {
       console.error("Error updating order:", error);
+      setErrorMessage("Không thể lưu đơn hàng. Vui lòng thử lại.");
     }
-    setEditingOrder(null);
   };
 
   // Delete order
   const handleDeleteOrder = async () => {
     try {
       await API.delete(`/orders/${confirmDelete.id}`); // DELETE API
-      setOrders(orders.filter((order) => order.id !== confirmDelete.id));
+      setOrders(orders.filter((order) => order._id !== confirmDelete.id));
     } catch (error) {
       console.error("Error deleting order:", error);
+      setErrorMessage("Không thể xóa đơn hàng. Vui lòng thử lại.");
     }
     setConfirmDelete({ show: false, id: null });
   };
@@ -142,6 +148,7 @@ function OrderList() {
           )}
         </div>
       </header>
+
       <div className="orders-container">
         {loading ? (
           <p>Đang tải...</p>
@@ -173,11 +180,11 @@ function OrderList() {
                       <td>{order.totalPrice}₫</td>
                       <td>{order.status}</td>
                       <td>
-                        <button onClick={() => console.log("Edit", order._id)}>
-                          Sửa
-                        </button>
+                        <button onClick={() => openEditForm(order)}>Sửa</button>
                         <button
-                          onClick={() => console.log("Delete", order._id)}
+                          onClick={() =>
+                            setConfirmDelete({ show: true, id: order._id })
+                          }
                         >
                           Xóa
                         </button>
@@ -187,6 +194,10 @@ function OrderList() {
             </tbody>
           </table>
         )}
+
+        {/* Display error message if any */}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+
         {confirmDelete.show && (
           <div className="confirm-overlay">
             <div className="confirm-box">
@@ -204,6 +215,60 @@ function OrderList() {
                 </button>
               </div>
             </div>
+          </div>
+        )}
+
+        {editingOrder && (
+          <div className="edit-form">
+            <h2>Chỉnh sửa đơn hàng</h2>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleEditOrder(editingOrder);  // Gửi đơn hàng đã chỉnh sửa lên server
+              }}
+            >
+              <label>
+                Tổng tiền:
+                <input
+                  type="number"
+                  value={editingOrder.totalPrice}  // Giá trị của tổng tiền trong đơn hàng
+                  onChange={(e) =>
+                    setEditingOrder({
+                      ...editingOrder,
+                      totalPrice: e.target.value,  // Cập nhật lại giá trị tổng tiền khi người dùng thay đổi
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                Trạng thái:
+                <select
+                  value={editingOrder.status}  // Giá trị của trạng thái đơn hàng
+                  onChange={(e) =>
+                    setEditingOrder({
+                      ...editingOrder,
+                      status: e.target.value,  // Cập nhật lại giá trị trạng thái khi người dùng thay đổi
+                    })
+                  }
+                >
+                  <option value="pending">Chờ xử lý</option>
+                  <option value="shipped">Đã gửi</option>
+                  <option value="delivered">Đã giao</option>
+                </select>
+              </label>
+
+              <div className="form-actions">
+                <button type="submit" className="submit-button">Lưu</button>
+                <button
+                  type="button"
+                  className="cancel-button"
+                  onClick={() => setEditingOrder(null)}  // Hủy chỉnh sửa và đóng form
+                >
+                  Hủy
+                </button>
+              </div>
+            </form>
           </div>
         )}
       </div>

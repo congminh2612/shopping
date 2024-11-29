@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import UserForm from "./UserForm";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faBars } from "@fortawesome/free-solid-svg-icons";
@@ -32,6 +31,7 @@ function UserList() {
       setLoading(true);
       try {
         const response = await API.get("/admin/users");
+        console.log(response.data); // Kiểm tra dữ liệu trả về
         setUsers(response.data || []);
       } catch (error) {
         console.error("Lỗi khi lấy danh sách người dùng:", error);
@@ -44,14 +44,16 @@ function UserList() {
 
   // Chỉnh sửa người dùng
   const handleEditUser = async (updatedUser) => {
+    if (!updatedUser._id) {
+      alert("ID người dùng không hợp lệ!");
+      return;
+    }
+
     try {
-      const response = await API.put(
-        `/admin/user/${updatedUser.id}`,
-        updatedUser
-      );
+      const response = await API.put(`/admin/user/${updatedUser._id}`, updatedUser);  // Dùng _id nếu ID trả về là _id
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
-          user.id === updatedUser.id ? response.data : user
+          user._id === updatedUser._id ? response.data : user
         )
       );
       alert("Cập nhật thành công!");
@@ -65,10 +67,15 @@ function UserList() {
 
   // Xóa người dùng
   const handleDeleteUser = async () => {
+    if (!confirmDelete.id) {
+      alert("ID người dùng không hợp lệ!");
+      return;
+    }
+
     try {
-      await API.delete(`/admin/user/${confirmDelete.id}`);
+      await API.delete(`/admin/user/${confirmDelete.id}`);  // Dùng _id nếu ID trả về là _id
       setUsers((prevUsers) =>
-        prevUsers.filter((user) => user.id !== confirmDelete.id)
+        prevUsers.filter((user) => user._id !== confirmDelete.id)  // Dùng _id nếu ID trả về là _id
       );
       alert("Xóa thành công!");
     } catch (error) {
@@ -80,12 +87,20 @@ function UserList() {
 
   // Mở form chỉnh sửa người dùng
   const openEditForm = (user) => {
+    if (!user._id) {
+      alert("ID người dùng không hợp lệ!");
+      return;
+    }
     setEditingUser(user);
     setIsFormOpen(true);
   };
 
   // Mở modal xác nhận xóa
   const openDeleteConfirm = (id) => {
+    if (!id) {
+      alert("ID người dùng không hợp lệ!");
+      return;
+    }
     setConfirmDelete({ show: true, id });
   };
 
@@ -167,8 +182,8 @@ function UserList() {
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
+                <tr key={user._id}>  {/* Dùng _id nếu dữ liệu trả về là _id */}
+                  <td>{user._id}</td>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
                   <td>{user.role}</td>
@@ -181,7 +196,7 @@ function UserList() {
                     </button>
                     <button
                       className="action-icon"
-                      onClick={() => openDeleteConfirm(user.id)}
+                      onClick={() => openDeleteConfirm(user._id)} 
                     >
                       <FontAwesomeIcon icon={faTrash} title="Xóa" />
                     </button>
@@ -193,7 +208,7 @@ function UserList() {
         )}
       </div>
 
-      {/* Form chỉnh sửa người dùng */}
+      {/* Modal và form chỉnh sửa */}
       {isFormOpen && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -280,15 +295,18 @@ function UserList() {
       {confirmDelete.show && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <h2>Xác nhận xóa</h2>
-            <p>Bạn có chắc chắn muốn xóa người dùng này?</p>
+            <h2>Xác nhận xóa người dùng</h2>
+            <p>Bạn có chắc chắn muốn xóa người dùng này không?</p>
             <div className="confirm-actions">
-              <button className="delete-button" onClick={handleDeleteUser}>
+              <button
+                onClick={handleDeleteUser}
+                className="delete-button"
+              >
                 Xóa
               </button>
               <button
-                className="cancel-button"
                 onClick={() => setConfirmDelete({ show: false, id: null })}
+                className="cancel-button"
               >
                 Hủy
               </button>
