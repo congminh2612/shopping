@@ -1,108 +1,84 @@
-/* General Styles */
-.verify-wrapper {
+/* Verify.css */
+
+/* Toàn bộ vùng chứa */
+.verify-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    min-height: 100vh;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
-}
-
-/* Container */
-.verify-wrapper .verify-container {
-    background: #ffffff;
-    padding: 40px 30px;
+    justify-content: center;
+    min-height: 80vh;
+    background-color: #f9f9f9; /* Thay đổi tùy theo theme */
+    padding: 2rem;
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 100%;
-    max-width: 400px;
-    box-sizing: border-box; /* Đảm bảo padding không làm thay đổi kích thước */
-}
-
-/* Title */
-.verify-wrapper .verify-container h2 {
-    font-size: 26px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    color: #333;
-}
-
-/* Instructions */
-.verify-wrapper .verify-container p {
-    font-size: 14px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
+  }
+  
+  /* Tiêu đề chính */
+  .verify-container h2 {
+    font-size: 2rem;
+    color: #333; /* Thay đổi để match với màu sắc của trang web */
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  /* Đoạn mô tả */
+  .verify-container p {
+    font-size: 1rem;
     color: #555;
-    margin-bottom: 15px;
-    line-height: 1.5;
-}
-
-/* Email/Username display */
-.verify-wrapper .verify-container strong {
-    font-weight: bold;
-    color: #333;
-}
-
-/* Input field */
-.verify-wrapper .verify-container input {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  /* Ô input */
+  .verify-container input {
     width: 100%;
-    padding: 12px;
-    font-size: 14px;
-    border: 1px solid #ddd;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ddd; /* Đường viền nhẹ */
     border-radius: 5px;
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
     outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.verify-wrapper .verify-container input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-}
-
-/* Buttons */
-.verify-wrapper .verify-container button {
-    background-color: #000000;
-    color: white;
+    transition: border 0.3s ease-in-out;
+  }
+  
+  /* Thay đổi màu viền khi focus */
+  .verify-container input:focus {
+    border: 1px solid #333; /* Điều chỉnh màu theo chủ đề của bạn */
+  }
+  
+  /* Nút xác minh */
+  .verify-container button {
+    width: 100%;
+    background-color: #333; /* Màu chính phù hợp với chủ đề */
+    color: #fff; /* Màu chữ trắng để dễ đọc */
+    font-size: 1.1rem;
+    padding: 0.8rem;
     border: none;
-    padding: 12px 15px;
-    font-size: 14px;
-    font-weight: bold;
-    text-transform: uppercase;
     border-radius: 5px;
     cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s ease;
-}
-
-.verify-wrapper .verify-container button:hover {
-    background-color: #333;
-}
-
-/* Error and success messages */
-.verify-wrapper .verify-container .error-message {
-    color: red;
-    font-size: 14px;
-    margin-bottom: 15px;
-}
-
-.verify-wrapper .verify-container .success-message {
-    color: green;
-    font-size: 14px;
-    margin-bottom: 15px;
-}
-
-/* Responsive Design */
-@media (max-width: 480px) {
-    .verify-wrapper .verify-container {
-        padding: 20px;
-    }
-
-    .verify-wrapper .verify-container h2 {
-        font-size: 22px;
-    }
-
-    .verify-wrapper .verify-container button {
-        padding: 10px 12px;
-    }
-}
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  /* Nút hover */
+  .verify-container button:hover {
+    background-color: #555; /* Làm nổi bật khi hover */
+  }
+  
+  /* Message hiển thị lỗi */
+  .error-message {
+    color: #d9534f; /* Màu đỏ để cảnh báo */
+    font-weight: 500;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  /* Message hiển thị thành công */
+  .success-message {
+    color: #5cb85c; /* Màu xanh lá cho thông báo thành công */
+    font-weight: 500;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  

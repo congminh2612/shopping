@@ -1,27 +1,25 @@
+// src/components/ProductList/ProductList.js
 import React, { useEffect, useState } from "react";
-import API from "../../api/api"; // Đảm bảo đường dẫn tới file API
+import { useNavigate } from "react-router-dom";
+import API from "../../api/api";
+import "./ProductList.css"; // CSS cho ProductList
 
-const ProductList = ({ category = "all" }) => {
+const ProductList = ({ category }) => {
   const [products, setProducts] = useState([]); // State để lưu danh sách sản phẩm
   const [loading, setLoading] = useState(true); // State để theo dõi trạng thái loading
   const [error, setError] = useState(null); // State để theo dõi lỗi
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    // Kiểm tra giá trị của category
-    console.log("Category:", category);
-
-    if (!category) {
-      setError("Category không xác định.");
-      setLoading(false);
-      return;
-    }
-
     // Fetch products từ API
     const fetchProducts = async () => {
       try {
         const { data } = await API.get(`/user/products?category=${category}`);
+        console.log("Fetched products:", data);
         setProducts(data); // Cập nhật state với dữ liệu sản phẩm
       } catch (err) {
+        console.error("Error fetching products:", err);
         setError(err.message || "Có lỗi xảy ra!");
       } finally {
         setLoading(false);
@@ -35,21 +33,33 @@ const ProductList = ({ category = "all" }) => {
   if (error) return <p>Error: {error}</p>; // Hiển thị lỗi nếu có
 
   return (
-    <div>
-      <h1>Danh sách sản phẩm</h1>
-      <ul>
+    <div className="product-list-container">
+      <h1 className="product-list-title">Danh sách sản phẩm</h1>
+      <div className="product-grid">
         {products.length > 0 ? (
           products.map((product) => (
-            <li key={product._id}>
-              <h3>{product.name}</h3> {/* Hiển thị tên sản phẩm */}
-              <p>Giá: {product.price} VND</p> {/* Hiển thị giá */}
-              <p>Mô tả: {product.description}</p> {/* Hiển thị mô tả */}
-            </li>
+            <div
+              className="product-card"
+              key={product._id}
+              onClick={() => navigate(`/product/${product._id}`)} // Điều hướng đến trang chi tiết sản phẩm
+            >
+              {product.image && (
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="product-image"
+                />
+              )}
+              <div className="product-card-content">
+                <h3 className="product-name">{product.name}</h3> {/* Hiển thị tên sản phẩm */}
+                <p className="product-price">{product.price} VND</p> {/* Hiển thị giá */}
+              </div>
+            </div>
           ))
         ) : (
           <p>Không có sản phẩm nào</p> // Trường hợp không có sản phẩm
         )}
-      </ul>
+      </div>
     </div>
   );
 };

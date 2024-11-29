@@ -1,62 +1,88 @@
-/* ProductList.css */
-body, html {
-  height: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  font-family: Arial, sans-serif;
+/* src/components/ProductList/ProductList.css */
+
+/* Vùng chứa danh sách sản phẩm */
+.product-list-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.product-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Hiển thị 3 cột sản phẩm để sản phẩm lớn và rõ ràng hơn */
-  gap: 60px; /* Tăng khoảng cách giữa các thẻ để thoáng hơn */
-  padding: 60px; /* Tăng phần padding xung quanh để bố cục thoáng hơn */
-  width: 100%;
-  max-width: 1400px; /* Đặt chiều rộng tối đa để bố cục không quá lớn trên màn hình lớn */
-  margin: 0 auto; /* Căn giữa bố cục sản phẩm */
-  flex-grow: 1;
-  overflow-y: auto; /* Cho phép cuộn dọc nếu nội dung quá dài */
-}
-
-.product-item {
-  background: #ffffff; /* Đổi sang màu trắng để rõ ràng hơn */
-  border-radius: 15px; /* Tăng bán kính để tạo sự mềm mại */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Tăng kích thước bóng để tạo độ nổi cho thẻ */
-  padding: 20px; /* Tăng phần đệm để nội dung thoáng hơn */
+/* Tiêu đề danh sách sản phẩm */
+.product-list-title {
   text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s; /* Tăng thời gian chuyển tiếp để mượt mà hơn */
-}
-
-.product-item img {
-  max-width: 100%;
-  height: 400px; /* Đặt chiều cao lớn hơn để sản phẩm rõ ràng hơn như mong muốn */
-  object-fit: cover; /* Đảm bảo hình ảnh được bao phủ đầy đủ trong khung */
-  border-radius: 10px; /* Tăng bán kính bo tròn của hình ảnh */
-  margin-bottom: 15px;
-}
-
-.product-item:hover {
-  transform: scale(1.05); /* Tăng tỷ lệ phóng to khi hover để gây chú ý hơn */
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Tăng bóng khi hover để thẻ nổi bật hơn */
-}
-
-.product-item h3 {
-  font-size: 1.5rem; /* Tăng kích thước chữ của tiêu đề sản phẩm để rõ hơn */
+  font-size: 2.5rem;
   font-weight: bold;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+/* Lưới sản phẩm */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Card của từng sản phẩm */
+.product-card {
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Hình ảnh sản phẩm */
+.product-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+/* Placeholder nếu không có hình ảnh */
+.product-placeholder {
+  width: 100%;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #aaa;
+  background-color: #f9f9f9;
+}
+
+/* Nội dung thẻ sản phẩm */
+.product-card-content {
+  padding: 15px;
+}
+
+/* Tên sản phẩm */
+.product-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
   margin-bottom: 10px;
 }
 
-.product-item p {
-  font-size: 1.2rem; /* Tăng kích thước chữ của giá sản phẩm để dễ đọc hơn */
-  color: #555;
+/* Giá sản phẩm */
+.product-price {
+  font-size: 1.1rem;
+  color: #e74c3c;
+  margin-bottom: 5px;
 }
 
-footer {
-  background: #333;
-  color: #fff;
-  text-align: center;
-  padding: 20px;
-  margin-top: auto;
-  width: 100%;
+/* Giá cũ của sản phẩm (nếu có) */
+.product-old-price {
+  font-size: 0.9rem;
+  color: #999;
+  text-decoration: line-through;
+  margin-bottom: 10px;
 }
