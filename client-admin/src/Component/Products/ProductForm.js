@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api"; // Import API instance đã cấu hình
 import "./Modal.css"; // Import CSS cho modal
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons"; // Import FontAwesome icon
 
 function ProductForm({ product = {}, onSave, onCancel }) {
   const [formValues, setFormValues] = useState({
@@ -8,7 +10,9 @@ function ProductForm({ product = {}, onSave, onCancel }) {
     price: product.price || 0,
     stock: product.stock || 0,
     category: product.category || "",
+    description: product.description || "", // Thêm trường mô tả
     attributes: product.attributes || [],
+    image: null, // Thêm trường hình ảnh
   });
   const [categories, setCategories] = useState([]); // Lưu danh mục
   const [errors, setErrors] = useState({}); // Lưu lỗi
@@ -17,8 +21,8 @@ function ProductForm({ product = {}, onSave, onCancel }) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await API.get("/admin/categories"); // Gọi API
-        setCategories(response.data); // Cập nhật state danh mục
+        const response = await API.get("/admin/categories");
+        setCategories(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -42,18 +46,22 @@ function ProductForm({ product = {}, onSave, onCancel }) {
     if (!formValues.category.trim()) {
       newErrors.category = "Danh mục là bắt buộc.";
     }
+    if (!formValues.description.trim()) {
+      newErrors.description = "Mô tả sản phẩm là bắt buộc.";
+    }
     formValues.attributes.forEach((attr, index) => {
       if (!attr.key.trim()) {
-        newErrors[`attrKey-${index}`] =
-          "Key của thuộc tính không được để trống.";
+        newErrors[`attrKey-${index}`] = "Key của thuộc tính không được để trống.";
       }
       if (!attr.value.trim()) {
-        newErrors[`attrValue-${index}`] =
-          "Value của thuộc tính không được để trống.";
+        newErrors[`attrValue-${index}`] = "Value của thuộc tính không được để trống.";
       }
     });
+    if (formValues.image && !formValues.image.type.startsWith("image/")) {
+      newErrors.image = "Chỉ được phép tải lên các file hình ảnh.";
+    }
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // Không có lỗi
+    return Object.keys(newErrors).length === 0;
   };
 
   // Xử lý thay đổi giá trị input
@@ -79,17 +87,34 @@ function ProductForm({ product = {}, onSave, onCancel }) {
 
   // Xóa một thuộc tính
   const handleRemoveAttribute = (index) => {
-    const updatedAttributes = formValues.attributes.filter(
-      (_, i) => i !== index
-    );
+    const updatedAttributes = formValues.attributes.filter((_, i) => i !== index);
     setFormValues({ ...formValues, attributes: updatedAttributes });
+  };
+
+  // Xử lý thay đổi hình ảnh
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setFormValues({ ...formValues, image: file });
   };
 
   // Submit form
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      onSave(formValues); // Gửi dữ liệu nếu hợp lệ
+      const formData = new FormData();
+      formData.append("name", formValues.name);
+      formData.append("price", formValues.price);
+      formData.append("stock", formValues.stock);
+      formData.append("category", formValues.category);
+      formData.append("description", formValues.description); // Thêm mô tả vào formData
+      formValues.attributes.forEach((attr, index) => {
+        formData.append(`attributes[${index}][key]`, attr.key);
+        formData.append(`attributes[${index}][value]`, attr.value);
+      });
+      if (formValues.image) {
+        formData.append("image", formValues.image);
+      }
+      onSave(formData);
     }
   };
 
@@ -157,6 +182,60 @@ function ProductForm({ product = {}, onSave, onCancel }) {
               ))}
             </select>
             {errors.category && <p className="error-text">{errors.category}</p>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="description">Mô tả sản phẩm:</label>
+            <textarea
+              id="description"
+              name="description"
+              value={formValues.description}
+              onChange={handleInputChange}
+              rows="4"
+              required
+            />
+            {errors.description && <p className="error-text">{errors.description}</p>}
+          </div>
+
+          <div className="attributes-section">
+            <h3>
+              Thuộc tính: 
+              <button type="button" className="add-attribute" onClick={handleAddAttribute}>
+                <FontAwesomeIcon icon={faPlus} /> {/* FontAwesome icon dấu cộng */}
+                Thêm thuộc tính
+              </button>
+            </h3>
+            {formValues.attributes.map((attr, index) => (
+              <div key={index} className="attribute-item">
+                <input
+                  type="text"
+                  placeholder="Key"
+                  value={attr.key}
+                  onChange={(e) => handleAttributeChange(index, "key", e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="Value"
+                  value={attr.value}
+                  onChange={(e) => handleAttributeChange(index, "value", e.target.value)}
+                />
+                <button type="button" onClick={() => handleRemoveAttribute(index)}>
+                  Xóa
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="image">Hình ảnh sản phẩm:</label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+            {errors.image && <p className="error-text">{errors.image}</p>}
           </div>
 
           <div className="form-actions">
