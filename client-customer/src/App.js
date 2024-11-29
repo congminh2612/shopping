@@ -13,7 +13,6 @@ import WishlistPage from "./components/Wishlist/Wishlist";
 import RequestPasswordReset from "./components/RequestPasswordReset/RequestPasswordReset";
 import ResetPassword from "./components/ResetPassword/ResetPassword";
 import Verify from "./components/Verify/Verify";
-import Profile from "./components/Profile/Profile";
 import SearchResults from "./components/SearchResults/SearchResults"; // Import đúng tên SearchResults
 import { AuthProvider } from "./contexts/AuthContext"; 
 import "./App.css";
@@ -61,8 +60,6 @@ function App() {
               {/* Xác minh tài khoản */}
               <Route path="/verify" element={<Verify />} />
 
-              {/* Trang cá nhân */}
-              <Route path="/profile" element={<Profile />} />
 
               {/* Trang kết quả tìm kiếm */}
               <Route path="/search" element={<SearchResults />} /> {/* Cập nhật thành SearchResults */}
