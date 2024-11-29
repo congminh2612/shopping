@@ -45,6 +45,7 @@ const productSchema = new mongoose.Schema({
       value: { type: String, required: true }, // Giá trị thuộc tính
     },
   ],
+  sales: { type: Number, default: 0 }, // Thêm trường "sales" với giá trị mặc định là 0
 });
 
 productSchema.pre("save", function (next) {

@@ -10,6 +10,7 @@ function OrderList() {
   const [editingOrder, setEditingOrder] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState({ show: false, id: null });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   // Fetch orders from API
@@ -17,10 +18,22 @@ function OrderList() {
     const fetchOrders = async () => {
       setLoading(true);
       try {
-        const response = await API.get("/cart"); // GET API
-        setOrders(response.data);
+        const response = await API.get("/orders/all");
+        console.log("API Response:", response.data); // In log toàn bộ response
+        if (Array.isArray(response.data)) {
+          setOrders(response.data);
+        } else if (
+          response.data.orders &&
+          Array.isArray(response.data.orders)
+        ) {
+          setOrders(response.data.orders);
+        } else {
+          setError("Invalid orders data format.");
+          setOrders([]);
+        }
       } catch (error) {
         console.error("Error fetching orders:", error);
+        setError("Failed to fetch orders.");
       } finally {
         setLoading(false);
       }
@@ -40,7 +53,10 @@ function OrderList() {
   // Edit existing order
   const handleEditOrder = async (updatedOrder) => {
     try {
-      const response = await API.put(`/cart/${updatedOrder.id}`, updatedOrder); // PUT API
+      const response = await API.put(
+        `/orders/${updatedOrder.id}`,
+        updatedOrder
+      ); // PUT API
       setOrders(
         orders.map((order) =>
           order.id === updatedOrder.id ? response.data : order
@@ -55,7 +71,7 @@ function OrderList() {
   // Delete order
   const handleDeleteOrder = async () => {
     try {
-      await API.delete(`/cart/${confirmDelete.id}`); // DELETE API
+      await API.delete(`/orders/${confirmDelete.id}`); // DELETE API
       setOrders(orders.filter((order) => order.id !== confirmDelete.id));
     } catch (error) {
       console.error("Error deleting order:", error);
@@ -129,6 +145,8 @@ function OrderList() {
       <div className="orders-container">
         {loading ? (
           <p>Đang tải...</p>
+        ) : error ? (
+          <p className="error-message">{error}</p>
         ) : (
           <table className="orders-table">
             <thead>
@@ -141,24 +159,31 @@ function OrderList() {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
-                <tr key={order.id}>
-                  <td>{order.id}</td>
-                  <td>{order.customer}</td>
-                  <td>{order.total}₫</td>
-                  <td>{order.status}</td>
-                  <td>
-                    <button onClick={() => openEditForm(order)}>Sửa</button>
-                    <button
-                      onClick={() =>
-                        setConfirmDelete({ show: true, id: order.id })
-                      }
-                    >
-                      Xóa
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {Array.isArray(orders) &&
+                orders
+                  .filter(
+                    (order) =>
+                      order.userId &&
+                      order.items.every((item) => item.productId)
+                  )
+                  .map((order) => (
+                    <tr key={order._id}>
+                      <td>{order._id}</td>
+                      <td>{order.userId?.name || "Unknown"}</td>
+                      <td>{order.totalPrice}₫</td>
+                      <td>{order.status}</td>
+                      <td>
+                        <button onClick={() => console.log("Edit", order._id)}>
+                          Sửa
+                        </button>
+                        <button
+                          onClick={() => console.log("Delete", order._id)}
+                        >
+                          Xóa
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
         )}

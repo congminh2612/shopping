@@ -194,10 +194,15 @@ exports.getOrders = async (req, res) => {
  */
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().populate("items.productId userId");
+    // Lọc và chỉ lấy các đơn hàng hợp lệ
+    const orders = await Order.find({
+      userId: { $ne: null }, // userId không phải null
+      "items.productId": { $ne: null }, // productId trong items không null
+    }).populate("items.productId userId"); // Điền thông tin từ các collection liên quan
+
     res.status(200).json({ orders });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching orders:", error);
     res.status(500).json({ message: "Failed to fetch orders", error });
   }
 };
@@ -222,5 +227,28 @@ exports.updateOrderStatus = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to update order status", error });
+  }
+};
+/**
+ * Delete an order (admin only)
+ */
+exports.deleteOrder = async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    // Tìm và xóa đơn hàng theo orderId
+    const deletedOrder = await Order.findByIdAndDelete(orderId);
+
+    if (!deletedOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.status(200).json({
+      message: "Order deleted successfully",
+      deletedOrder, // Thông tin đơn hàng đã xóa
+    });
+  } catch (error) {
+    console.error("Error deleting order:", error);
+    res.status(500).json({ message: "Failed to delete order", error });
   }
 };
