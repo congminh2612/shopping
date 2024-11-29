@@ -58,8 +58,8 @@ function ProductList() {
   // Add or edit product
   const handleSaveProduct = async (product) => {
     try {
-      if (product.id) {
-        await API.put(`/admin/product/${product.id}`, product);
+      if (product._id) {
+        await API.put(`/admin/product/${product._id}`, product); // Use _id for edit
       } else {
         await API.post("/admin/product", product);
       }
