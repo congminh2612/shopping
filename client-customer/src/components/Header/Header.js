@@ -1,26 +1,41 @@
-import React, { useState, useEffect, useContext } from "react";
+// src/components/Header/Header.js
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSearch, faShoppingCart, faUser, faHeart, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../contexts/AuthContext"; // Import AuthContext
 
 function Header() {
-  const { isLoggedIn, login, logout } = useContext(AuthContext); // Lấy trạng thái và hàm từ context
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); 
+
   const navigate = useNavigate();
 
-  // Hàm để thay đổi trạng thái mở/đóng của menu
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
   const toggleMenu = () => {
     setIsMenuOpen((prevIsMenuOpen) => !prevIsMenuOpen);
   };
 
-  // Hàm để đóng menu khi chọn mục
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
 
-  // Hàm để điều hướng tới trang profile hoặc login tùy thuộc vào trạng thái người dùng
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
+
   const handleUserIconClick = () => {
     if (isLoggedIn) {
       navigate("/profile");
@@ -29,38 +44,18 @@ function Header() {
     }
   };
 
-  // Hàm để đăng xuất người dùng
-  const handleLogout = () => {
-    logout(); // Gọi hàm logout từ context để cập nhật trạng thái
-    navigate("/login");
+  const toggleSearchBar = () => {
+    setShowSearchBar((prevShowSearchBar) => !prevShowSearchBar);
   };
 
-  // useEffect để lắng nghe sự thay đổi của token trong localStorage
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        login(token);
-      } else {
-        logout();
-      }
-    };
-
-    // Đăng ký lắng nghe sự kiện thay đổi localStorage
-    window.addEventListener("storage", handleStorageChange);
-
-    // Kiểm tra trạng thái khi component được mount
-    handleStorageChange();
-
-    // Cleanup event listener khi component bị unmount
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, [login, logout]);
+  const handleSearchRedirect = () => {
+    if (searchTerm.trim() !== "") {
+      navigate(`/search?query=${searchTerm}`);
+    }
+  };
 
   return (
     <>
-      {/* Thanh Header */}
       <header className="header-container">
         <div className="header-left">
           <button className="hamburger-button" onClick={toggleMenu}>
@@ -73,17 +68,15 @@ function Header() {
         </div>
 
         <div className="header-icons">
-          <Link to="/search" className="header-icon">
+          <div className="header-icon" onClick={toggleSearchBar}>
             <FontAwesomeIcon icon={faSearch} />
-          </Link>
+          </div>
           <Link to="/wishlist" className="header-icon">
             <FontAwesomeIcon icon={faHeart} />
           </Link>
           <Link to="/cart" className="header-icon">
             <FontAwesomeIcon icon={faShoppingCart} />
           </Link>
-
-          {/* Biểu tượng User hoặc Logout - tùy thuộc vào trạng thái đăng nhập */}
           <div
             className="header-icon"
             onClick={isLoggedIn ? handleLogout : handleUserIconClick}
@@ -97,7 +90,20 @@ function Header() {
         </div>
       </header>
 
-      {/* Thanh Menu Ngang */}
+      {showSearchBar && (
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Tìm kiếm sản phẩm..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button className="search-submit" onClick={handleSearchRedirect}>
+            <FontAwesomeIcon icon={faSearch} />
+          </button>
+        </div>
+      )}
+
       <nav className={`horizontal-menu ${isMenuOpen ? "open" : ""}`}>
         <ul>
           <li>

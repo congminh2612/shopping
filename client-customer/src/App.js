@@ -6,7 +6,6 @@ import Footer from "./components/Footer/Footer";
 import HomePage from "./components/Homepage/Homepage";
 import ProductList from "./components/ProductList/ProductList";
 import CartPage from "./components/Cart/Cart";
-import SearchPage from "./components/Search/Search";
 import LoginPage from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import ProductDetail from "./components/ProductDetail/ProductDetail";
@@ -15,12 +14,13 @@ import RequestPasswordReset from "./components/RequestPasswordReset/RequestPassw
 import ResetPassword from "./components/ResetPassword/ResetPassword";
 import Verify from "./components/Verify/Verify";
 import Profile from "./components/Profile/Profile";
-import { AuthProvider } from "./contexts/AuthContext"; // Import AuthProvider để bao bọc toàn bộ ứng dụng
+import SearchResults from "./components/SearchResults/SearchResults"; // Import đúng tên SearchResults
+import { AuthProvider } from "./contexts/AuthContext"; 
 import "./App.css";
 
 function App() {
   return (
-    <AuthProvider> {/* Bọc ứng dụng bằng AuthProvider để sử dụng thông tin xác thực người dùng */}
+    <AuthProvider>
       <Router>
         <div className="app-container">
           {/* Header */}
@@ -48,9 +48,6 @@ function App() {
               {/* Danh sách yêu thích */}
               <Route path="/wishlist" element={<WishlistPage />} />
 
-              {/* Tìm kiếm */}
-              <Route path="/search" element={<SearchPage />} />
-
               {/* Đăng nhập */}
               <Route path="/login" element={<LoginPage />} />
 
@@ -66,6 +63,9 @@ function App() {
 
               {/* Trang cá nhân */}
               <Route path="/profile" element={<Profile />} />
+
+              {/* Trang kết quả tìm kiếm */}
+              <Route path="/search" element={<SearchResults />} /> {/* Cập nhật thành SearchResults */}
 
               {/* Trang không tìm thấy - điều hướng về trang chủ */}
               <Route path="*" element={<HomePage />} />
