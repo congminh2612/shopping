@@ -76,20 +76,16 @@ exports.createOrder = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Log user information
     console.log("Creating order for user ID:", userId);
 
-    // Kiểm tra email người dùng
     if (!req.user || !req.user.email) {
       console.error("User email not found:", req.user);
       return res.status(400).json({ message: "User email is not available" });
     }
 
-    // Tìm cart của người dùng
     console.log("Fetching cart for user ID:", userId);
     const cart = await Cart.findOne({ userId }).populate("items.productId");
 
-    // Log thông tin giỏ hàng
     console.log("Cart found:", cart);
 
     if (!cart || cart.items.length === 0) {
@@ -97,7 +93,6 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ message: "Cart is empty" });
     }
 
-    // Chuẩn bị dữ liệu order items
     const orderItems = cart.items.map((item) => {
       if (!item.productId || !item.productId._id) {
         console.error("Product not found for cart item:", item);
@@ -105,15 +100,14 @@ exports.createOrder = async (req, res) => {
       }
       return {
         productId: item.productId._id,
+        productName: item.productId.name, // Thêm tên sản phẩm
         quantity: item.quantity,
         priceAtPurchase: item.productId.price,
       };
     });
 
-    // Log thông tin các sản phẩm trong order
     console.log("Order items prepared:", orderItems);
 
-    // Tính tổng tiền
     const totalPrice = orderItems.reduce(
       (sum, item) => sum + item.quantity * item.priceAtPurchase,
       0
@@ -121,7 +115,6 @@ exports.createOrder = async (req, res) => {
 
     console.log("Total price calculated:", totalPrice);
 
-    // Tạo order
     const order = new Order({
       userId,
       items: orderItems,
@@ -132,24 +125,28 @@ exports.createOrder = async (req, res) => {
     await order.save();
     console.log("Order created successfully:", order);
 
-    // Clear cart
     cart.items = [];
     await cart.save();
     console.log("Cart cleared for user ID:", userId);
 
-    // Gửi email xác nhận
     try {
       console.log("Sending order confirmation email to:", req.user.email);
       await sendMail(req.user.email, "orderConfirmation", {
-        orderId: order._id,
-        totalAmount: totalPrice,
+        items: orderItems.map((item) => ({
+          productName: item.productName,
+          quantity: item.quantity,
+          priceAtPurchase: item.priceAtPurchase,
+        })),
+        totalPrice: totalPrice,
+        customerName: req.user.name || "Unknown Name",
+        customerAddress: req.user.address || "Unknown Address",
+        customerPhone: req.user.phone || "Unknown Phone",
       });
       console.log("Order confirmation email sent successfully.");
     } catch (emailError) {
       console.error("Error sending email:", emailError.message);
     }
 
-    // Trả về kết quả thành công
     res.status(201).json({ message: "Order created successfully", order });
   } catch (error) {
     console.error("Error creating order:", error);
