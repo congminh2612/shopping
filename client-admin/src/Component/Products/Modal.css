@@ -20,13 +20,11 @@
   padding: 30px;
   max-width: 650px;
   width: 100%;
-  max-height: 80vh; /* Giới hạn chiều cao của modal */
-  overflow-y: auto; /* Cho phép cuộn nếu nội dung quá dài */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   animation: slideUp 0.3s ease-out;
   position: relative;
-  resize: both; /* Cho phép thay đổi kích thước modal */
-  overflow: auto; /* Cho phép cuộn cả chiều ngang lẫn chiều dọc */
+  overflow-y: auto;  /* Cho phép cuộn dọc */
+  max-height: 80vh;  /* Giới hạn chiều cao của modal */
 }
 
 /* Close button */
@@ -154,58 +152,36 @@
   }
 }
 
-/* Image Upload */
-.image-upload-group {
+/* Màu sắc và Kích thước */
+.attribute-item {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Giữ khoảng cách giữa ô chọn màu và ô chọn kích thước */
   margin-bottom: 15px;
 }
 
-.image-upload-group input[type="file"] {
-  padding: 12px;
+/* Ô chọn màu */
+.attribute-item input[type="color"] {
+  width: 50px;
+  height: 30px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 10px;  /* Khoảng cách giữa ô chọn màu và ô chọn kích thước */
+}
+
+/* Ô chọn kích thước */
+.attribute-item select {
+  width: 130px;  /* Kích thước ô chọn kích thước rộng hơn */
+  padding: 10px;
+  font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #fafafa;
   cursor: pointer;
-  font-size: 14px;
 }
 
-.image-upload-group input[type="file"]:hover {
-  background-color: #e2e6ea;
-}
-
-.image-upload-group input[type="file"]:focus {
-  outline: none;
-  box-shadow: 0 0 8px rgba(191, 41, 11, 0.3);
-}
-
-/* Attributes Section */
-.attributes-section {
-  margin-bottom: 25px;
-}
-
-.attributes-section h3 {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 15px;
-  text-transform: uppercase;
-}
-
-.attribute-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.attribute-item input {
-  margin-right: 10px;
-  width: 45%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #fafafa;
-  font-size: 14px;
-}
-
+/* Nút Thêm thuộc tính */
 .attribute-item button {
   padding: 10px 15px;
   font-size: 14px;
@@ -222,7 +198,9 @@
 }
 
 /* Add Attribute Button */
-button[type="button"].add-attribute {
+.add-attribute {
+  display: flex;
+  justify-content: center;
   margin-top: 20px;
   padding: 12px 25px;
   background-color: #a41609;
@@ -234,7 +212,7 @@ button[type="button"].add-attribute {
   transition: background-color 0.3s ease;
 }
 
-button[type="button"].add-attribute:hover {
+.add-attribute:hover {
   background-color: #d52a07;
 }
 
@@ -257,44 +235,26 @@ input[type="file"]:focus {
   box-shadow: 0 0 8px rgba(200, 29, 3, 0.3);
 }
 
-/* Add Attribute Button with FontAwesome Icon */
-.add-attribute {
+/* Custom styles cho các ô màu */
+.color-picker {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 25px;
-  background-color: #ff6f61;
-  color: white;
-  border: none;
-  border-radius: 8px;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.color-option {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+  border: 2px solid transparent;
+  transition: border-color 0.3s ease;
 }
 
-.add-attribute i {
-  margin-right: 8px; /* Space between icon and text */
+.color-option.selected {
+  border-color: #333;
 }
 
-.add-attribute:hover {
-  background-color: #e94e3b;
-}
-
-/* File Input button */
-input[type="file"] {
-  font-size: 14px;
-  color: #333;
-  background-color: #fafafa;
-  border: 1px solid #ccc;
-  padding: 12px;
-  border-radius: 8px;
-}
-
-input[type="file"]:hover {
-  background-color: #e2e6ea;
-}
-
-input[type="file"]:focus {
-  outline: none;
-  box-shadow: 0 0 8px rgba(200, 29, 3, 0.3);
+.color-option:hover {
+  opacity: 0.8;
 }

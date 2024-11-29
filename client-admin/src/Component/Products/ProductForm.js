@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api"; // Import API instance đã cấu hình
 import "./Modal.css"; // Import CSS cho modal
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons"; // Import FontAwesome icon
 
 function ProductForm({ product = {}, onSave, onCancel }) {
   const [formValues, setFormValues] = useState({
     name: product.name || "",
     price: product.price || 0,
     stock: product.stock || 0,
-    category: product.category || "",
+    category: product.category || "", // Đây sẽ là ObjectId của category
     description: product.description || "", // Thêm trường mô tả
-    attributes: product.attributes || [],
+    attributes: product.attributes || [
+      { key: "Màu", value: product.attributes?.find(attr => attr.key === "Màu")?.value || "#000000" }, // Mặc định là màu đen
+      { key: "Kích thước", value: product.attributes?.find(attr => attr.key === "Kích thước")?.value || "M" }, // Mặc định là M
+    ],
     image: null, // Thêm trường hình ảnh
   });
   const [categories, setCategories] = useState([]); // Lưu danh mục
@@ -41,82 +42,43 @@ function ProductForm({ product = {}, onSave, onCancel }) {
       newErrors.price = "Giá sản phẩm phải lớn hơn 0.";
     }
     if (formValues.stock < 0) {
-      newErrors.stock = "Số lượng không được nhỏ hơn 0.";
+      newErrors.stock = "Số lượng sản phẩm phải lớn hơn hoặc bằng 0.";
     }
-    if (!formValues.category.trim()) {
+    if (!formValues.category) {
       newErrors.category = "Danh mục là bắt buộc.";
     }
-    if (!formValues.description.trim()) {
-      newErrors.description = "Mô tả sản phẩm là bắt buộc.";
-    }
-    formValues.attributes.forEach((attr, index) => {
-      if (!attr.key.trim()) {
-        newErrors[`attrKey-${index}`] = "Key của thuộc tính không được để trống.";
-      }
-      if (!attr.value.trim()) {
-        newErrors[`attrValue-${index}`] = "Value của thuộc tính không được để trống.";
-      }
-    });
-    if (formValues.image && !formValues.image.type.startsWith("image/")) {
-      newErrors.image = "Chỉ được phép tải lên các file hình ảnh.";
+    if (!formValues.image) {
+      newErrors.image = "Vui lòng tải lên hình ảnh sản phẩm.";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Xử lý thay đổi giá trị input
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
-
-  // Thêm một thuộc tính mới
-  const handleAddAttribute = () => {
-    setFormValues({
-      ...formValues,
-      attributes: [...formValues.attributes, { key: "", value: "" }],
-    });
-  };
-
-  // Thay đổi giá trị thuộc tính
+  // Handle thay đổi thuộc tính màu và kích thước
   const handleAttributeChange = (index, field, value) => {
     const updatedAttributes = [...formValues.attributes];
     updatedAttributes[index][field] = value;
     setFormValues({ ...formValues, attributes: updatedAttributes });
   };
 
-  // Xóa một thuộc tính
-  const handleRemoveAttribute = (index) => {
-    const updatedAttributes = formValues.attributes.filter((_, i) => i !== index);
-    setFormValues({ ...formValues, attributes: updatedAttributes });
+  // Handle thay đổi thông tin sản phẩm
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
   };
 
-  // Xử lý thay đổi hình ảnh
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setFormValues({ ...formValues, image: file });
-  };
-
-  // Submit form
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // Handle submit form
+  const handleSubmit = () => {
     if (validateForm()) {
-      const formData = new FormData();
-      formData.append("name", formValues.name);
-      formData.append("price", formValues.price);
-      formData.append("stock", formValues.stock);
-      formData.append("category", formValues.category);
-      formData.append("description", formValues.description); // Thêm mô tả vào formData
-      formValues.attributes.forEach((attr, index) => {
-        formData.append(`attributes[${index}][key]`, attr.key);
-        formData.append(`attributes[${index}][value]`, attr.value);
-      });
-      if (formValues.image) {
-        formData.append("image", formValues.image);
-      }
-      onSave(formData);
+      onSave(formValues); // Call save callback function
     }
   };
+
+  // Danh sách màu cơ bản
+  const basicColors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#000000", "#FFFFFF", "#808080"];
 
   return (
     <div className="modal-overlay">
@@ -124,55 +86,48 @@ function ProductForm({ product = {}, onSave, onCancel }) {
         <button className="modal-close" onClick={onCancel}>
           &times;
         </button>
-        <h2>{product.id ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm mới"}</h2>
-        <form onSubmit={handleSubmit}>
+        <div className="modal-header">Thêm Sản Phẩm</div>
+        <form>
           <div className="form-group">
-            <label htmlFor="name">Tên sản phẩm:</label>
+            <label htmlFor="name">Tên sản phẩm</label>
             <input
               type="text"
               id="name"
               name="name"
               value={formValues.name}
-              onChange={handleInputChange}
-              required
+              onChange={handleChange}
             />
-            {errors.name && <p className="error-text">{errors.name}</p>}
+            {errors.name && <div className="error-text">{errors.name}</div>}
           </div>
-
           <div className="form-group">
-            <label htmlFor="price">Giá:</label>
+            <label htmlFor="price">Giá sản phẩm</label>
             <input
               type="number"
               id="price"
               name="price"
               value={formValues.price}
-              onChange={handleInputChange}
-              required
+              onChange={handleChange}
             />
-            {errors.price && <p className="error-text">{errors.price}</p>}
+            {errors.price && <div className="error-text">{errors.price}</div>}
           </div>
-
           <div className="form-group">
-            <label htmlFor="stock">Số lượng:</label>
+            <label htmlFor="stock">Số lượng sản phẩm</label>
             <input
               type="number"
               id="stock"
               name="stock"
               value={formValues.stock}
-              onChange={handleInputChange}
-              required
+              onChange={handleChange}
             />
-            {errors.stock && <p className="error-text">{errors.stock}</p>}
+            {errors.stock && <div className="error-text">{errors.stock}</div>}
           </div>
-
           <div className="form-group">
-            <label htmlFor="category">Danh mục:</label>
+            <label htmlFor="category">Danh mục</label>
             <select
               id="category"
               name="category"
               value={formValues.category}
-              onChange={handleInputChange}
-              required
+              onChange={handleChange}
             >
               <option value="">Chọn danh mục</option>
               {categories.map((category) => (
@@ -181,65 +136,55 @@ function ProductForm({ product = {}, onSave, onCancel }) {
                 </option>
               ))}
             </select>
-            {errors.category && <p className="error-text">{errors.category}</p>}
+            {errors.category && <div className="error-text">{errors.category}</div>}
+          </div>
+
+          {/* Màu sắc */}
+          <div className="form-group">
+            <label htmlFor="color">Màu sắc</label>
+            <div className="color-picker">
+              {basicColors.map((color) => (
+                <div
+                  key={color}
+                  className={`color-option ${formValues.attributes[0]?.value === color ? "selected" : ""}`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => handleAttributeChange(0, "value", color)}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Kích thước */}
+          <div className="form-group">
+            <label htmlFor="size">Kích thước</label>
+            <select
+              id="size"
+              name="size"
+              value={formValues.attributes[1]?.value}
+              onChange={(e) => handleAttributeChange(1, "value", e.target.value)}
+            >
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+              <option value="XXL">XXL</option>
+            </select>
           </div>
 
           <div className="form-group">
-            <label htmlFor="description">Mô tả sản phẩm:</label>
-            <textarea
-              id="description"
-              name="description"
-              value={formValues.description}
-              onChange={handleInputChange}
-              rows="4"
-              required
-            />
-            {errors.description && <p className="error-text">{errors.description}</p>}
-          </div>
-
-          <div className="attributes-section">
-            <h3>
-              Thuộc tính: 
-              <button type="button" className="add-attribute" onClick={handleAddAttribute}>
-                <FontAwesomeIcon icon={faPlus} /> {/* FontAwesome icon dấu cộng */}
-                Thêm thuộc tính
-              </button>
-            </h3>
-            {formValues.attributes.map((attr, index) => (
-              <div key={index} className="attribute-item">
-                <input
-                  type="text"
-                  placeholder="Key"
-                  value={attr.key}
-                  onChange={(e) => handleAttributeChange(index, "key", e.target.value)}
-                />
-                <input
-                  type="text"
-                  placeholder="Value"
-                  value={attr.value}
-                  onChange={(e) => handleAttributeChange(index, "value", e.target.value)}
-                />
-                <button type="button" onClick={() => handleRemoveAttribute(index)}>
-                  Xóa
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="image">Hình ảnh sản phẩm:</label>
+            <label htmlFor="image">Hình ảnh sản phẩm</label>
             <input
               type="file"
               id="image"
               name="image"
               accept="image/*"
-              onChange={handleImageChange}
+              onChange={(e) => setFormValues({ ...formValues, image: e.target.files[0] })}
             />
-            {errors.image && <p className="error-text">{errors.image}</p>}
+            {errors.image && <div className="error-text">{errors.image}</div>}
           </div>
 
-          <div className="form-actions">
-            <button type="submit" className="save-button">
+          <div className="form-group">
+            <button type="button" className="save-button" onClick={handleSubmit}>
               Lưu
             </button>
             <button type="button" className="cancel-button" onClick={onCancel}>
