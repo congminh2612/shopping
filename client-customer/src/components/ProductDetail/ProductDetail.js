@@ -48,7 +48,7 @@ const ProductDetail = () => {
 		try {
 			const addtocartRes = await API.post(`/cart/`, {
 				productId: id,
-				quantity: value,
+				quantity: +value,
 			});
 			if (addtocartRes.data) {
 				alert('add to cart successfully');

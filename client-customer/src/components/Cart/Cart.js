@@ -12,8 +12,9 @@ function Cart() {
 		const fetchCartList = async () => {
 			try {
 				const { data } = await API.get(`/cart/`);
-				if (data) {
-					setCartItems(data.items);
+				console.log(data);
+				if (data && data.items) {
+					setCartItems(data?.items);
 				}
 			} catch (err) {
 				console.error('Error fetching products:', err);
